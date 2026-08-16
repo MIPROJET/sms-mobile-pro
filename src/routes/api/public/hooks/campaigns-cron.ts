@@ -86,5 +86,10 @@ async function handle(request: Request) {
 }
 
 export const Route = createFileRoute("/api/public/hooks/campaigns-cron")({
-  server: { handlers: { GET: () => handle(), POST: () => handle() } },
+  server: {
+    handlers: {
+      GET: ({ request }) => handle(request),
+      POST: ({ request }) => handle(request),
+    },
+  },
 });
