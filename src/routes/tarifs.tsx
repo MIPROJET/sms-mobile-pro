@@ -113,6 +113,27 @@ function TarifsPage() {
             ))}
           </div>
 
+          <div className="mt-10">
+            <div className="text-xs font-mono uppercase tracking-widest text-primary mb-3">
+              Prix unitaire par palier
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {tiers.map((t) => (
+                <div key={t.id} className="bg-background/5 border border-background/10 p-4 rounded-sm">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-background/50">
+                    {t.label}
+                  </div>
+                  <div className="font-display text-xl font-extrabold mt-1">
+                    {t.unit_price_fcfa}{" "}
+                    <span className="text-xs font-normal opacity-70">FCFA / SMS</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+
+
           <div className="mt-10 p-6 bg-background/5 border border-background/10 rounded-sm">
             <div className="text-xs font-mono uppercase tracking-widest text-primary mb-2">
               Sur mesure
