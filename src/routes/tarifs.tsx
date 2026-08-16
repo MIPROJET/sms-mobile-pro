@@ -78,7 +78,7 @@ function TarifsPage() {
                   {p.name}
                 </div>
                 <div className="text-2xl sm:text-3xl font-display font-extrabold mb-1">
-                  {p.price}{" "}
+                  {p.price_fcfa.toLocaleString("fr-FR")}{" "}
                   <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
                 </div>
                 <div
@@ -88,15 +88,16 @@ function TarifsPage() {
                       : "text-sm mb-5 pb-5 border-b border-background/10"
                   }
                 >
-                  {p.volume}
+                  {p.sms_volume.toLocaleString("fr-FR")} SMS
                 </div>
                 <ul className="text-sm space-y-2.5 mb-6 flex-grow">
-                  {p.features.map((f) => (
-                    <li key={f} className={p.featured ? "" : "opacity-80"}>
-                      • {f}
+                  {(Array.isArray(p.features) ? (p.features as unknown[]) : []).map((f) => (
+                    <li key={String(f)} className={p.featured ? "" : "opacity-80"}>
+                      • {String(f)}
                     </li>
                   ))}
                 </ul>
+
                 <Link
                   to="/auth"
                   search={{ redirect: `/dashboard/checkout/${p.slug}` }}
