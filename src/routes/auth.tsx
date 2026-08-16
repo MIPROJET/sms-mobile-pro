@@ -76,12 +76,15 @@ function AuthPage() {
         } catch { /* profile trigger may not be ready yet; ignore */ }
         toast.success("Compte créé. Vous êtes connecté.");
       } else {
-        const resolved = await resolveLoginIdentifier({ data: { identifier } });
-        if (!resolved.email) throw new Error("Identifiant introuvable. Utilisez votre email ou votre nom d'utilisateur.");
-        const { error } = await supabase.auth.signInWithPassword({ email: resolved.email, password });
+        const session = await loginWithIdentifier({ data: { identifier, password } });
+        const { error } = await supabase.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+        });
         if (error) throw error;
         toast.success("Connexion réussie.");
       }
+
       navigate({ to: targetPath as any, replace: true });
     } catch (err: any) {
       toast.error(err.message ?? "Erreur d'authentification");
