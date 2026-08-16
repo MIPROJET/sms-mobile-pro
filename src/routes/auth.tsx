@@ -97,13 +97,11 @@ function AuthPage() {
     if (!identifier) return toast.error("Entrez votre email d'abord.");
     setLoading(true);
     try {
-      const resolved = await resolveLoginIdentifier({ data: { identifier } });
-      if (!resolved.email) throw new Error("Identifiant introuvable.");
-      const { error } = await supabase.auth.resetPasswordForEmail(resolved.email, {
-        redirectTo: window.location.origin + "/reset-password",
+      await requestPasswordReset({
+        data: { identifier, redirectTo: window.location.origin + "/reset-password" },
       });
-      if (error) throw error;
-      toast.success("Email de récupération envoyé. Vérifiez votre boîte.");
+      toast.success("Si un compte correspond, un email de récupération vient d'être envoyé.");
+
     } catch (err: any) {
       toast.error(err.message ?? "Erreur");
     } finally {
