@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { resolveLoginIdentifier } from "@/lib/auth.functions";
+import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
@@ -76,12 +76,15 @@ function AuthPage() {
         } catch { /* profile trigger may not be ready yet; ignore */ }
         toast.success("Compte créé. Vous êtes connecté.");
       } else {
-        const resolved = await resolveLoginIdentifier({ data: { identifier } });
-        if (!resolved.email) throw new Error("Identifiant introuvable. Utilisez votre email ou votre nom d'utilisateur.");
-        const { error } = await supabase.auth.signInWithPassword({ email: resolved.email, password });
+        const session = await loginWithIdentifier({ data: { identifier, password } });
+        const { error } = await supabase.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+        });
         if (error) throw error;
         toast.success("Connexion réussie.");
       }
+
       navigate({ to: targetPath as any, replace: true });
     } catch (err: any) {
       toast.error(err.message ?? "Erreur d'authentification");
@@ -94,13 +97,11 @@ function AuthPage() {
     if (!identifier) return toast.error("Entrez votre email d'abord.");
     setLoading(true);
     try {
-      const resolved = await resolveLoginIdentifier({ data: { identifier } });
-      if (!resolved.email) throw new Error("Identifiant introuvable.");
-      const { error } = await supabase.auth.resetPasswordForEmail(resolved.email, {
-        redirectTo: window.location.origin + "/reset-password",
+      await requestPasswordReset({
+        data: { identifier, redirectTo: window.location.origin + "/reset-password" },
       });
-      if (error) throw error;
-      toast.success("Email de récupération envoyé. Vérifiez votre boîte.");
+      toast.success("Si un compte correspond, un email de récupération vient d'être envoyé.");
+
     } catch (err: any) {
       toast.error(err.message ?? "Erreur");
     } finally {
