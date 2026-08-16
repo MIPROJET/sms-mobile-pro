@@ -35,7 +35,9 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { packages, tiers } = Route.useLoaderData();
   return (
+
     <SiteLayout>
       {/* Hero */}
       <section className="px-4 pt-10 pb-14 sm:px-8 sm:pt-16 sm:pb-24 bg-muted">
