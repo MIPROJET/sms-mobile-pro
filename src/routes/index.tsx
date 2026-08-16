@@ -1,9 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-chrome";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { listPackages } from "@/lib/packages.functions";
+import { listPricingTiers } from "@/lib/pricing.functions";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
+  loader: async () => ({
+    packages: await listPackages(),
+    tiers: await listPricingTiers(),
+  }),
+  errorComponent: () => <SiteLayout><div className="p-10 text-center">Une erreur est survenue.</div></SiteLayout>,
+  notFoundComponent: () => <SiteLayout><div className="p-10 text-center">Page introuvable.</div></SiteLayout>,
+
   head: () => ({
     meta: [
       { title: "SMS Pro Mobile — Plateforme SMS Marketing en Côte d'Ivoire" },
