@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { resolveLoginIdentifier } from "@/lib/auth.functions";
+import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
