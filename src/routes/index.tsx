@@ -346,7 +346,7 @@ function LandingPage() {
           </div>
           <div className="space-y-3">
             {[
-              { q: "Combien coûte un SMS ?", a: "À partir de 9,5 FCFA/SMS selon le pack. Aucun frais d'abonnement, pas de minimum." },
+              { q: "Combien coûte un SMS ?", a: "À partir de 12 FCFA/SMS selon le volume (25 F de 200 à 999, 20 F de 1 000 à 9 999, 15 F de 10 000 à 99 999, 12 F au-delà de 100 000). Aucun frais d'abonnement, pas de minimum." },
               { q: "Quels opérateurs sont couverts ?", a: "Orange, MTN et Moov en Côte d'Ivoire, avec routage optimisé vers l'Afrique de l'Ouest." },
               { q: "Puis-je utiliser mon nom de marque comme expéditeur ?", a: "Oui, Sender ID alphanumérique jusqu'à 11 caractères après validation opérateur (24h)." },
               { q: "Est-ce conforme RGPD ?", a: "Oui : opt-in explicite, opt-out automatique par STOP, journalisation et droit à l'oubli." },
