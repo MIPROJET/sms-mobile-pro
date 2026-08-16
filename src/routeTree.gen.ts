@@ -9,38 +9,624 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as SolutionsRouteImport } from './routes/solutions'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as ConditionsRouteImport } from './routes/conditions'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ActualitesRouteImport } from './routes/actualites'
+import { Route as AProposRouteImport } from './routes/a-propos'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as Char126oauthInitiateRouteImport } from './routes/~oauth.initiate'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ActualitesSlugRouteImport } from './routes/actualites.$slug'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as ActualitesTagSlugRouteImport } from './routes/actualites.tag.$slug'
+import { Route as ActualitesCategorieSlugRouteImport } from './routes/actualites.categorie.$slug'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardOrdersRouteImport } from './routes/_authenticated/dashboard.orders'
+import { Route as AuthenticatedDashboardCampaignsRouteImport } from './routes/_authenticated/dashboard.campaigns'
+import { Route as AuthenticatedDashboardApiKeysRouteImport } from './routes/_authenticated/dashboard.api-keys'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminSignupsRouteImport } from './routes/_authenticated/admin.signups'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminPackagesRouteImport } from './routes/_authenticated/admin.packages'
+import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
+import { Route as AuthenticatedAdminNewsCategoriesRouteImport } from './routes/_authenticated/admin.news-categories'
+import { Route as AuthenticatedAdminNewsRouteImport } from './routes/_authenticated/admin.news'
+import { Route as AuthenticatedAdminHeroRouteImport } from './routes/_authenticated/admin.hero'
+import { Route as AuthenticatedAdminContactsRouteImport } from './routes/_authenticated/admin.contacts'
+import { Route as AuthenticatedAdminCampaignsRouteImport } from './routes/_authenticated/admin.campaigns'
+import { Route as ApiPublicWebhooksNmgroupeRouteImport } from './routes/api/public/webhooks/nmgroupe'
+import { Route as ApiPublicWebhooksFedapayRouteImport } from './routes/api/public/webhooks/fedapay'
+import { Route as ApiPublicWebhooksCinetpayRouteImport } from './routes/api/public/webhooks/cinetpay'
+import { Route as ApiPublicV1SmsRouteImport } from './routes/api/public/v1/sms'
+import { Route as ApiPublicHooksCampaignsCronRouteImport } from './routes/api/public/hooks/campaigns-cron'
+import { Route as AuthenticatedDashboardCheckoutSlugRouteImport } from './routes/_authenticated/dashboard.checkout.$slug'
 
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolutionsRoute = SolutionsRouteImport.update({
+  id: '/solutions',
+  path: '/solutions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscriptionRoute = InscriptionRouteImport.update({
+  id: '/inscription',
+  path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConditionsRoute = ConditionsRouteImport.update({
+  id: '/conditions',
+  path: '/conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActualitesRoute = ActualitesRouteImport.update({
+  id: '/actualites',
+  path: '/actualites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char126oauthInitiateRoute = Char126oauthInitiateRouteImport.update({
+  id: '/~oauth/initiate',
+  path: '/~oauth/initiate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
+const ActualitesSlugRoute = ActualitesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ActualitesRoute,
+} as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ActualitesTagSlugRoute = ActualitesTagSlugRouteImport.update({
+  id: '/tag/$slug',
+  path: '/tag/$slug',
+  getParentRoute: () => ActualitesRoute,
+} as any)
+const ActualitesCategorieSlugRoute = ActualitesCategorieSlugRouteImport.update({
+  id: '/categorie/$slug',
+  path: '/categorie/$slug',
+  getParentRoute: () => ActualitesRoute,
+} as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/dashboard/settings',
+    path: '/dashboard/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardOrdersRoute =
+  AuthenticatedDashboardOrdersRouteImport.update({
+    id: '/dashboard/orders',
+    path: '/dashboard/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardCampaignsRoute =
+  AuthenticatedDashboardCampaignsRouteImport.update({
+    id: '/dashboard/campaigns',
+    path: '/dashboard/campaigns',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardApiKeysRoute =
+  AuthenticatedDashboardApiKeysRouteImport.update({
+    id: '/dashboard/api-keys',
+    path: '/dashboard/api-keys',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminSignupsRoute =
+  AuthenticatedAdminSignupsRouteImport.update({
+    id: '/admin/signups',
+    path: '/admin/signups',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/admin/settings',
+    path: '/admin/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminPackagesRoute =
+  AuthenticatedAdminPackagesRouteImport.update({
+    id: '/admin/packages',
+    path: '/admin/packages',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminOrdersRoute =
+  AuthenticatedAdminOrdersRouteImport.update({
+    id: '/admin/orders',
+    path: '/admin/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminNewsCategoriesRoute =
+  AuthenticatedAdminNewsCategoriesRouteImport.update({
+    id: '/admin/news-categories',
+    path: '/admin/news-categories',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminNewsRoute = AuthenticatedAdminNewsRouteImport.update({
+  id: '/admin/news',
+  path: '/admin/news',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminHeroRoute = AuthenticatedAdminHeroRouteImport.update({
+  id: '/admin/hero',
+  path: '/admin/hero',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminContactsRoute =
+  AuthenticatedAdminContactsRouteImport.update({
+    id: '/admin/contacts',
+    path: '/admin/contacts',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminCampaignsRoute =
+  AuthenticatedAdminCampaignsRouteImport.update({
+    id: '/admin/campaigns',
+    path: '/admin/campaigns',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ApiPublicWebhooksNmgroupeRoute =
+  ApiPublicWebhooksNmgroupeRouteImport.update({
+    id: '/api/public/webhooks/nmgroupe',
+    path: '/api/public/webhooks/nmgroupe',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicWebhooksFedapayRoute =
+  ApiPublicWebhooksFedapayRouteImport.update({
+    id: '/api/public/webhooks/fedapay',
+    path: '/api/public/webhooks/fedapay',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicWebhooksCinetpayRoute =
+  ApiPublicWebhooksCinetpayRouteImport.update({
+    id: '/api/public/webhooks/cinetpay',
+    path: '/api/public/webhooks/cinetpay',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicV1SmsRoute = ApiPublicV1SmsRouteImport.update({
+  id: '/api/public/v1/sms',
+  path: '/api/public/v1/sms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksCampaignsCronRoute =
+  ApiPublicHooksCampaignsCronRouteImport.update({
+    id: '/api/public/hooks/campaigns-cron',
+    path: '/api/public/hooks/campaigns-cron',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedDashboardCheckoutSlugRoute =
+  AuthenticatedDashboardCheckoutSlugRouteImport.update({
+    id: '/dashboard/checkout/$slug',
+    path: '/dashboard/checkout/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/actualites': typeof ActualitesRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
+  '/conditions': typeof ConditionsRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/inscription': typeof InscriptionRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/solutions': typeof SolutionsRoute
+  '/tarifs': typeof TarifsRoute
+  '/actualites/$slug': typeof ActualitesSlugRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/~oauth/initiate': typeof Char126oauthInitiateRoute
+  '/admin/campaigns': typeof AuthenticatedAdminCampaignsRoute
+  '/admin/contacts': typeof AuthenticatedAdminContactsRoute
+  '/admin/hero': typeof AuthenticatedAdminHeroRoute
+  '/admin/news': typeof AuthenticatedAdminNewsRoute
+  '/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/packages': typeof AuthenticatedAdminPackagesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/signups': typeof AuthenticatedAdminSignupsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/dashboard/api-keys': typeof AuthenticatedDashboardApiKeysRoute
+  '/dashboard/campaigns': typeof AuthenticatedDashboardCampaignsRoute
+  '/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/actualites/categorie/$slug': typeof ActualitesCategorieSlugRoute
+  '/actualites/tag/$slug': typeof ActualitesTagSlugRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/checkout/$slug': typeof AuthenticatedDashboardCheckoutSlugRoute
+  '/api/public/hooks/campaigns-cron': typeof ApiPublicHooksCampaignsCronRoute
+  '/api/public/v1/sms': typeof ApiPublicV1SmsRoute
+  '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
+  '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
+  '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/actualites': typeof ActualitesRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
+  '/conditions': typeof ConditionsRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/inscription': typeof InscriptionRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/solutions': typeof SolutionsRoute
+  '/tarifs': typeof TarifsRoute
+  '/actualites/$slug': typeof ActualitesSlugRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/~oauth/initiate': typeof Char126oauthInitiateRoute
+  '/admin/campaigns': typeof AuthenticatedAdminCampaignsRoute
+  '/admin/contacts': typeof AuthenticatedAdminContactsRoute
+  '/admin/hero': typeof AuthenticatedAdminHeroRoute
+  '/admin/news': typeof AuthenticatedAdminNewsRoute
+  '/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/packages': typeof AuthenticatedAdminPackagesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/signups': typeof AuthenticatedAdminSignupsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/dashboard/api-keys': typeof AuthenticatedDashboardApiKeysRoute
+  '/dashboard/campaigns': typeof AuthenticatedDashboardCampaignsRoute
+  '/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/actualites/categorie/$slug': typeof ActualitesCategorieSlugRoute
+  '/actualites/tag/$slug': typeof ActualitesTagSlugRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/checkout/$slug': typeof AuthenticatedDashboardCheckoutSlugRoute
+  '/api/public/hooks/campaigns-cron': typeof ApiPublicHooksCampaignsCronRoute
+  '/api/public/v1/sms': typeof ApiPublicV1SmsRoute
+  '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
+  '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
+  '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/a-propos': typeof AProposRoute
+  '/actualites': typeof ActualitesRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
+  '/conditions': typeof ConditionsRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/inscription': typeof InscriptionRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/solutions': typeof SolutionsRoute
+  '/tarifs': typeof TarifsRoute
+  '/actualites/$slug': typeof ActualitesSlugRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/~oauth/initiate': typeof Char126oauthInitiateRoute
+  '/_authenticated/admin/campaigns': typeof AuthenticatedAdminCampaignsRoute
+  '/_authenticated/admin/contacts': typeof AuthenticatedAdminContactsRoute
+  '/_authenticated/admin/hero': typeof AuthenticatedAdminHeroRoute
+  '/_authenticated/admin/news': typeof AuthenticatedAdminNewsRoute
+  '/_authenticated/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/_authenticated/admin/packages': typeof AuthenticatedAdminPackagesRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/signups': typeof AuthenticatedAdminSignupsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/dashboard/api-keys': typeof AuthenticatedDashboardApiKeysRoute
+  '/_authenticated/dashboard/campaigns': typeof AuthenticatedDashboardCampaignsRoute
+  '/_authenticated/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/actualites/categorie/$slug': typeof ActualitesCategorieSlugRoute
+  '/actualites/tag/$slug': typeof ActualitesTagSlugRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/checkout/$slug': typeof AuthenticatedDashboardCheckoutSlugRoute
+  '/api/public/hooks/campaigns-cron': typeof ApiPublicHooksCampaignsCronRoute
+  '/api/public/v1/sms': typeof ApiPublicV1SmsRoute
+  '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
+  '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
+  '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/a-propos'
+    | '/actualites'
+    | '/auth'
+    | '/conditions'
+    | '/confidentialite'
+    | '/contact'
+    | '/inscription'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/solutions'
+    | '/tarifs'
+    | '/actualites/$slug'
+    | '/auth/callback'
+    | '/~oauth/initiate'
+    | '/admin/campaigns'
+    | '/admin/contacts'
+    | '/admin/hero'
+    | '/admin/news'
+    | '/admin/news-categories'
+    | '/admin/orders'
+    | '/admin/packages'
+    | '/admin/settings'
+    | '/admin/signups'
+    | '/admin/users'
+    | '/dashboard/api-keys'
+    | '/dashboard/campaigns'
+    | '/dashboard/orders'
+    | '/dashboard/settings'
+    | '/actualites/categorie/$slug'
+    | '/actualites/tag/$slug'
+    | '/admin/'
+    | '/dashboard/'
+    | '/dashboard/checkout/$slug'
+    | '/api/public/hooks/campaigns-cron'
+    | '/api/public/v1/sms'
+    | '/api/public/webhooks/cinetpay'
+    | '/api/public/webhooks/fedapay'
+    | '/api/public/webhooks/nmgroupe'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/a-propos'
+    | '/actualites'
+    | '/auth'
+    | '/conditions'
+    | '/confidentialite'
+    | '/contact'
+    | '/inscription'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/solutions'
+    | '/tarifs'
+    | '/actualites/$slug'
+    | '/auth/callback'
+    | '/~oauth/initiate'
+    | '/admin/campaigns'
+    | '/admin/contacts'
+    | '/admin/hero'
+    | '/admin/news'
+    | '/admin/news-categories'
+    | '/admin/orders'
+    | '/admin/packages'
+    | '/admin/settings'
+    | '/admin/signups'
+    | '/admin/users'
+    | '/dashboard/api-keys'
+    | '/dashboard/campaigns'
+    | '/dashboard/orders'
+    | '/dashboard/settings'
+    | '/actualites/categorie/$slug'
+    | '/actualites/tag/$slug'
+    | '/admin'
+    | '/dashboard'
+    | '/dashboard/checkout/$slug'
+    | '/api/public/hooks/campaigns-cron'
+    | '/api/public/v1/sms'
+    | '/api/public/webhooks/cinetpay'
+    | '/api/public/webhooks/fedapay'
+    | '/api/public/webhooks/nmgroupe'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/a-propos'
+    | '/actualites'
+    | '/auth'
+    | '/conditions'
+    | '/confidentialite'
+    | '/contact'
+    | '/inscription'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/solutions'
+    | '/tarifs'
+    | '/actualites/$slug'
+    | '/auth/callback'
+    | '/~oauth/initiate'
+    | '/_authenticated/admin/campaigns'
+    | '/_authenticated/admin/contacts'
+    | '/_authenticated/admin/hero'
+    | '/_authenticated/admin/news'
+    | '/_authenticated/admin/news-categories'
+    | '/_authenticated/admin/orders'
+    | '/_authenticated/admin/packages'
+    | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/signups'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/dashboard/api-keys'
+    | '/_authenticated/dashboard/campaigns'
+    | '/_authenticated/dashboard/orders'
+    | '/_authenticated/dashboard/settings'
+    | '/actualites/categorie/$slug'
+    | '/actualites/tag/$slug'
+    | '/_authenticated/admin/'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/checkout/$slug'
+    | '/api/public/hooks/campaigns-cron'
+    | '/api/public/v1/sms'
+    | '/api/public/webhooks/cinetpay'
+    | '/api/public/webhooks/fedapay'
+    | '/api/public/webhooks/nmgroupe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AProposRoute: typeof AProposRoute
+  ActualitesRoute: typeof ActualitesRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
+  ConditionsRoute: typeof ConditionsRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
+  ContactRoute: typeof ContactRoute
+  InscriptionRoute: typeof InscriptionRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SolutionsRoute: typeof SolutionsRoute
+  TarifsRoute: typeof TarifsRoute
+  Char126oauthInitiateRoute: typeof Char126oauthInitiateRoute
+  ApiPublicHooksCampaignsCronRoute: typeof ApiPublicHooksCampaignsCronRoute
+  ApiPublicV1SmsRoute: typeof ApiPublicV1SmsRoute
+  ApiPublicWebhooksCinetpayRoute: typeof ApiPublicWebhooksCinetpayRoute
+  ApiPublicWebhooksFedapayRoute: typeof ApiPublicWebhooksFedapayRoute
+  ApiPublicWebhooksNmgroupeRoute: typeof ApiPublicWebhooksNmgroupeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solutions': {
+      id: '/solutions'
+      path: '/solutions'
+      fullPath: '/solutions'
+      preLoaderRoute: typeof SolutionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conditions': {
+      id: '/conditions'
+      path: '/conditions'
+      fullPath: '/conditions'
+      preLoaderRoute: typeof ConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/actualites': {
+      id: '/actualites'
+      path: '/actualites'
+      fullPath: '/actualites'
+      preLoaderRoute: typeof ActualitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +634,288 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/~oauth/initiate': {
+      id: '/~oauth/initiate'
+      path: '/~oauth/initiate'
+      fullPath: '/~oauth/initiate'
+      preLoaderRoute: typeof Char126oauthInitiateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/actualites/$slug': {
+      id: '/actualites/$slug'
+      path: '/$slug'
+      fullPath: '/actualites/$slug'
+      preLoaderRoute: typeof ActualitesSlugRouteImport
+      parentRoute: typeof ActualitesRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/actualites/tag/$slug': {
+      id: '/actualites/tag/$slug'
+      path: '/tag/$slug'
+      fullPath: '/actualites/tag/$slug'
+      preLoaderRoute: typeof ActualitesTagSlugRouteImport
+      parentRoute: typeof ActualitesRoute
+    }
+    '/actualites/categorie/$slug': {
+      id: '/actualites/categorie/$slug'
+      path: '/categorie/$slug'
+      fullPath: '/actualites/categorie/$slug'
+      preLoaderRoute: typeof ActualitesCategorieSlugRouteImport
+      parentRoute: typeof ActualitesRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/dashboard/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/orders': {
+      id: '/_authenticated/dashboard/orders'
+      path: '/dashboard/orders'
+      fullPath: '/dashboard/orders'
+      preLoaderRoute: typeof AuthenticatedDashboardOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/campaigns': {
+      id: '/_authenticated/dashboard/campaigns'
+      path: '/dashboard/campaigns'
+      fullPath: '/dashboard/campaigns'
+      preLoaderRoute: typeof AuthenticatedDashboardCampaignsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/api-keys': {
+      id: '/_authenticated/dashboard/api-keys'
+      path: '/dashboard/api-keys'
+      fullPath: '/dashboard/api-keys'
+      preLoaderRoute: typeof AuthenticatedDashboardApiKeysRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/signups': {
+      id: '/_authenticated/admin/signups'
+      path: '/admin/signups'
+      fullPath: '/admin/signups'
+      preLoaderRoute: typeof AuthenticatedAdminSignupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/packages': {
+      id: '/_authenticated/admin/packages'
+      path: '/admin/packages'
+      fullPath: '/admin/packages'
+      preLoaderRoute: typeof AuthenticatedAdminPackagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/orders': {
+      id: '/_authenticated/admin/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/news-categories': {
+      id: '/_authenticated/admin/news-categories'
+      path: '/admin/news-categories'
+      fullPath: '/admin/news-categories'
+      preLoaderRoute: typeof AuthenticatedAdminNewsCategoriesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/news': {
+      id: '/_authenticated/admin/news'
+      path: '/admin/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AuthenticatedAdminNewsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/hero': {
+      id: '/_authenticated/admin/hero'
+      path: '/admin/hero'
+      fullPath: '/admin/hero'
+      preLoaderRoute: typeof AuthenticatedAdminHeroRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/contacts': {
+      id: '/_authenticated/admin/contacts'
+      path: '/admin/contacts'
+      fullPath: '/admin/contacts'
+      preLoaderRoute: typeof AuthenticatedAdminContactsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/campaigns': {
+      id: '/_authenticated/admin/campaigns'
+      path: '/admin/campaigns'
+      fullPath: '/admin/campaigns'
+      preLoaderRoute: typeof AuthenticatedAdminCampaignsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/webhooks/nmgroupe': {
+      id: '/api/public/webhooks/nmgroupe'
+      path: '/api/public/webhooks/nmgroupe'
+      fullPath: '/api/public/webhooks/nmgroupe'
+      preLoaderRoute: typeof ApiPublicWebhooksNmgroupeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/fedapay': {
+      id: '/api/public/webhooks/fedapay'
+      path: '/api/public/webhooks/fedapay'
+      fullPath: '/api/public/webhooks/fedapay'
+      preLoaderRoute: typeof ApiPublicWebhooksFedapayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/cinetpay': {
+      id: '/api/public/webhooks/cinetpay'
+      path: '/api/public/webhooks/cinetpay'
+      fullPath: '/api/public/webhooks/cinetpay'
+      preLoaderRoute: typeof ApiPublicWebhooksCinetpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/sms': {
+      id: '/api/public/v1/sms'
+      path: '/api/public/v1/sms'
+      fullPath: '/api/public/v1/sms'
+      preLoaderRoute: typeof ApiPublicV1SmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/campaigns-cron': {
+      id: '/api/public/hooks/campaigns-cron'
+      path: '/api/public/hooks/campaigns-cron'
+      fullPath: '/api/public/hooks/campaigns-cron'
+      preLoaderRoute: typeof ApiPublicHooksCampaignsCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard/checkout/$slug': {
+      id: '/_authenticated/dashboard/checkout/$slug'
+      path: '/dashboard/checkout/$slug'
+      fullPath: '/dashboard/checkout/$slug'
+      preLoaderRoute: typeof AuthenticatedDashboardCheckoutSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminCampaignsRoute: typeof AuthenticatedAdminCampaignsRoute
+  AuthenticatedAdminContactsRoute: typeof AuthenticatedAdminContactsRoute
+  AuthenticatedAdminHeroRoute: typeof AuthenticatedAdminHeroRoute
+  AuthenticatedAdminNewsRoute: typeof AuthenticatedAdminNewsRoute
+  AuthenticatedAdminNewsCategoriesRoute: typeof AuthenticatedAdminNewsCategoriesRoute
+  AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
+  AuthenticatedAdminPackagesRoute: typeof AuthenticatedAdminPackagesRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSignupsRoute: typeof AuthenticatedAdminSignupsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedDashboardApiKeysRoute: typeof AuthenticatedDashboardApiKeysRoute
+  AuthenticatedDashboardCampaignsRoute: typeof AuthenticatedDashboardCampaignsRoute
+  AuthenticatedDashboardOrdersRoute: typeof AuthenticatedDashboardOrdersRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardCheckoutSlugRoute: typeof AuthenticatedDashboardCheckoutSlugRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminCampaignsRoute: AuthenticatedAdminCampaignsRoute,
+  AuthenticatedAdminContactsRoute: AuthenticatedAdminContactsRoute,
+  AuthenticatedAdminHeroRoute: AuthenticatedAdminHeroRoute,
+  AuthenticatedAdminNewsRoute: AuthenticatedAdminNewsRoute,
+  AuthenticatedAdminNewsCategoriesRoute: AuthenticatedAdminNewsCategoriesRoute,
+  AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
+  AuthenticatedAdminPackagesRoute: AuthenticatedAdminPackagesRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSignupsRoute: AuthenticatedAdminSignupsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedDashboardApiKeysRoute: AuthenticatedDashboardApiKeysRoute,
+  AuthenticatedDashboardCampaignsRoute: AuthenticatedDashboardCampaignsRoute,
+  AuthenticatedDashboardOrdersRoute: AuthenticatedDashboardOrdersRoute,
+  AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedDashboardCheckoutSlugRoute:
+    AuthenticatedDashboardCheckoutSlugRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface ActualitesRouteChildren {
+  ActualitesSlugRoute: typeof ActualitesSlugRoute
+  ActualitesCategorieSlugRoute: typeof ActualitesCategorieSlugRoute
+  ActualitesTagSlugRoute: typeof ActualitesTagSlugRoute
+}
+
+const ActualitesRouteChildren: ActualitesRouteChildren = {
+  ActualitesSlugRoute: ActualitesSlugRoute,
+  ActualitesCategorieSlugRoute: ActualitesCategorieSlugRoute,
+  ActualitesTagSlugRoute: ActualitesTagSlugRoute,
+}
+
+const ActualitesRouteWithChildren = ActualitesRoute._addFileChildren(
+  ActualitesRouteChildren,
+)
+
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AProposRoute: AProposRoute,
+  ActualitesRoute: ActualitesRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
+  ConditionsRoute: ConditionsRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
+  ContactRoute: ContactRoute,
+  InscriptionRoute: InscriptionRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SolutionsRoute: SolutionsRoute,
+  TarifsRoute: TarifsRoute,
+  Char126oauthInitiateRoute: Char126oauthInitiateRoute,
+  ApiPublicHooksCampaignsCronRoute: ApiPublicHooksCampaignsCronRoute,
+  ApiPublicV1SmsRoute: ApiPublicV1SmsRoute,
+  ApiPublicWebhooksCinetpayRoute: ApiPublicWebhooksCinetpayRoute,
+  ApiPublicWebhooksFedapayRoute: ApiPublicWebhooksFedapayRoute,
+  ApiPublicWebhooksNmgroupeRoute: ApiPublicWebhooksNmgroupeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
