@@ -163,14 +163,9 @@ function LandingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { name: "Starter", price: "7 500", volume: "500 SMS", featured: false },
-              { name: "Business", price: "13 000", volume: "1 000 SMS", featured: true },
-              { name: "Pro", price: "55 000", volume: "5 000 SMS", featured: false },
-              { name: "Enterprise", price: "95 000", volume: "10 000 SMS", featured: false },
-            ].map((p) => (
+            {packages.map((p) => (
               <div
-                key={p.name}
+                key={p.slug}
                 className={
                   p.featured
                     ? "bg-primary p-5 sm:p-6 rounded-sm flex flex-col"
@@ -187,9 +182,10 @@ function LandingPage() {
                   {p.name}
                 </div>
                 <div className="text-2xl sm:text-3xl font-display font-extrabold mb-1">
-                  {p.price} <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
+                  {p.price_fcfa.toLocaleString("fr-FR")}{" "}
+                  <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
                 </div>
-                <div className="text-sm mb-4">{p.volume}</div>
+                <div className="text-sm mb-4">{p.sms_volume.toLocaleString("fr-FR")} SMS</div>
                 <Link
                   to="/tarifs"
                   className={
@@ -203,6 +199,20 @@ function LandingPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {tiers.map((t) => (
+              <div key={t.id} className="bg-background/5 border border-background/10 p-4 rounded-sm">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-background/50">
+                  {t.label}
+                </div>
+                <div className="font-display text-xl font-extrabold mt-1">
+                  {t.unit_price_fcfa} <span className="text-xs font-normal opacity-70">FCFA / SMS</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
