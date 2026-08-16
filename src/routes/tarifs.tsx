@@ -1,19 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, PageHero } from "@/components/site-chrome";
+import { listPackages } from "@/lib/packages.functions";
+import { listPricingTiers } from "@/lib/pricing.functions";
 
 export const Route = createFileRoute("/tarifs")({
   component: TarifsPage,
+  loader: async () => ({
+    packages: await listPackages(),
+    tiers: await listPricingTiers(),
+  }),
+  errorComponent: () => <SiteLayout><div className="p-10 text-center">Une erreur est survenue.</div></SiteLayout>,
+  notFoundComponent: () => <SiteLayout><div className="p-10 text-center">Page introuvable.</div></SiteLayout>,
+
   head: () => ({
     meta: [
-      { title: "Tarifs SMS en FCFA — Packages Starter à Enterprise | SMS Pro Mobile" },
+      { title: "Tarifs SMS dégressifs en FCFA — de 25 à 12 F par SMS | SMS Pro Mobile" },
       {
         name: "description",
         content:
-          "Packages SMS clairs à partir de 7 500 FCFA. Starter, Business, Pro et Enterprise. Paiement Mobile Money (MTN, Orange, Wave). Sans frais cachés.",
+          "Tarifs SMS dégressifs : 25 FCFA de 200 à 999 SMS, 20 FCFA de 1 000 à 9 999, 15 FCFA de 10 000 à 99 999, 12 FCFA au-delà de 100 000. Paiement Mobile Money (MTN, Orange, Wave). Sans frais cachés.",
       },
       {
         property: "og:title",
-        content: "Tarifs SMS en FCFA — Packages transparents à partir de 7 500 FCFA",
+        content: "Tarifs SMS dégressifs en FCFA — de 25 à 12 FCFA par SMS",
       },
       {
         property: "og:description",
@@ -27,15 +36,10 @@ export const Route = createFileRoute("/tarifs")({
   }),
 });
 
-const packages = [
-  { slug: "starter", name: "Starter", price: "7 500", volume: "500 SMS", features: ["Support 24/7", "Dashboard mobile", "Sender ID standard", "Rapports basiques"], featured: false },
-  { slug: "business", name: "Business", price: "13 000", volume: "1 000 SMS", features: ["Sender ID personnalisé", "API Gateway inclus", "Groupes de contacts", "Support prioritaire"], featured: true },
-  { slug: "pro", name: "Pro", price: "55 000", volume: "5 000 SMS", features: ["Tout Business +", "Rapports avancés", "Webhooks de livraison", "Templates illimités"], featured: false },
-  { slug: "enterprise", name: "Enterprise", price: "95 000", volume: "10 000 SMS", features: ["Priorité d'envoi", "Manager de compte dédié", "SLA garanti", "Facturation mensuelle"], featured: false },
-];
-
 function TarifsPage() {
+  const { packages, tiers } = Route.useLoaderData();
   return (
+
     <SiteLayout>
       <PageHero
         eyebrow="Tarifs"
@@ -74,7 +78,7 @@ function TarifsPage() {
                   {p.name}
                 </div>
                 <div className="text-2xl sm:text-3xl font-display font-extrabold mb-1">
-                  {p.price}{" "}
+                  {p.price_fcfa.toLocaleString("fr-FR")}{" "}
                   <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
                 </div>
                 <div
@@ -84,15 +88,16 @@ function TarifsPage() {
                       : "text-sm mb-5 pb-5 border-b border-background/10"
                   }
                 >
-                  {p.volume}
+                  {p.sms_volume.toLocaleString("fr-FR")} SMS
                 </div>
                 <ul className="text-sm space-y-2.5 mb-6 flex-grow">
-                  {p.features.map((f) => (
-                    <li key={f} className={p.featured ? "" : "opacity-80"}>
-                      • {f}
+                  {(Array.isArray(p.features) ? (p.features as unknown[]) : []).map((f) => (
+                    <li key={String(f)} className={p.featured ? "" : "opacity-80"}>
+                      • {String(f)}
                     </li>
                   ))}
                 </ul>
+
                 <Link
                   to="/auth"
                   search={{ redirect: `/dashboard/checkout/${p.slug}` }}
@@ -107,6 +112,27 @@ function TarifsPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-10">
+            <div className="text-xs font-mono uppercase tracking-widest text-primary mb-3">
+              Prix unitaire par palier
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {tiers.map((t) => (
+                <div key={t.id} className="bg-background/5 border border-background/10 p-4 rounded-sm">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-background/50">
+                    {t.label}
+                  </div>
+                  <div className="font-display text-xl font-extrabold mt-1">
+                    {t.unit_price_fcfa}{" "}
+                    <span className="text-xs font-normal opacity-70">FCFA / SMS</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+
 
           <div className="mt-10 p-6 bg-background/5 border border-background/10 rounded-sm">
             <div className="text-xs font-mono uppercase tracking-widest text-primary mb-2">

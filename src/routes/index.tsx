@@ -1,9 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-chrome";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { listPackages } from "@/lib/packages.functions";
+import { listPricingTiers } from "@/lib/pricing.functions";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
+  loader: async () => ({
+    packages: await listPackages(),
+    tiers: await listPricingTiers(),
+  }),
+  errorComponent: () => <SiteLayout><div className="p-10 text-center">Une erreur est survenue.</div></SiteLayout>,
+  notFoundComponent: () => <SiteLayout><div className="p-10 text-center">Page introuvable.</div></SiteLayout>,
+
   head: () => ({
     meta: [
       { title: "SMS Pro Mobile — Plateforme SMS Marketing en Côte d'Ivoire" },
@@ -26,7 +35,9 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { packages, tiers } = Route.useLoaderData();
   return (
+
     <SiteLayout>
       {/* Hero */}
       <section className="px-4 pt-10 pb-14 sm:px-8 sm:pt-16 sm:pb-24 bg-muted">
@@ -154,14 +165,9 @@ function LandingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { name: "Starter", price: "7 500", volume: "500 SMS", featured: false },
-              { name: "Business", price: "13 000", volume: "1 000 SMS", featured: true },
-              { name: "Pro", price: "55 000", volume: "5 000 SMS", featured: false },
-              { name: "Enterprise", price: "95 000", volume: "10 000 SMS", featured: false },
-            ].map((p) => (
+            {packages.map((p) => (
               <div
-                key={p.name}
+                key={p.slug}
                 className={
                   p.featured
                     ? "bg-primary p-5 sm:p-6 rounded-sm flex flex-col"
@@ -178,9 +184,10 @@ function LandingPage() {
                   {p.name}
                 </div>
                 <div className="text-2xl sm:text-3xl font-display font-extrabold mb-1">
-                  {p.price} <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
+                  {p.price_fcfa.toLocaleString("fr-FR")}{" "}
+                  <span className="text-xs sm:text-sm font-normal opacity-70">FCFA</span>
                 </div>
-                <div className="text-sm mb-4">{p.volume}</div>
+                <div className="text-sm mb-4">{p.sms_volume.toLocaleString("fr-FR")} SMS</div>
                 <Link
                   to="/tarifs"
                   className={
@@ -194,6 +201,20 @@ function LandingPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {tiers.map((t) => (
+              <div key={t.id} className="bg-background/5 border border-background/10 p-4 rounded-sm">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-background/50">
+                  {t.label}
+                </div>
+                <div className="font-display text-xl font-extrabold mt-1">
+                  {t.unit_price_fcfa} <span className="text-xs font-normal opacity-70">FCFA / SMS</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
@@ -325,7 +346,7 @@ function LandingPage() {
           </div>
           <div className="space-y-3">
             {[
-              { q: "Combien coûte un SMS ?", a: "À partir de 9,5 FCFA/SMS selon le pack. Aucun frais d'abonnement, pas de minimum." },
+              { q: "Combien coûte un SMS ?", a: "À partir de 12 FCFA/SMS selon le volume (25 F de 200 à 999, 20 F de 1 000 à 9 999, 15 F de 10 000 à 99 999, 12 F au-delà de 100 000). Aucun frais d'abonnement, pas de minimum." },
               { q: "Quels opérateurs sont couverts ?", a: "Orange, MTN et Moov en Côte d'Ivoire, avec routage optimisé vers l'Afrique de l'Ouest." },
               { q: "Puis-je utiliser mon nom de marque comme expéditeur ?", a: "Oui, Sender ID alphanumérique jusqu'à 11 caractères après validation opérateur (24h)." },
               { q: "Est-ce conforme RGPD ?", a: "Oui : opt-in explicite, opt-out automatique par STOP, journalisation et droit à l'oubli." },
