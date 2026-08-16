@@ -14,15 +14,15 @@ export const Route = createFileRoute("/tarifs")({
 
   head: () => ({
     meta: [
-      { title: "Tarifs SMS en FCFA — Packages Starter à Enterprise | SMS Pro Mobile" },
+      { title: "Tarifs SMS dégressifs en FCFA — de 25 à 12 F par SMS | SMS Pro Mobile" },
       {
         name: "description",
         content:
-          "Packages SMS clairs à partir de 7 500 FCFA. Starter, Business, Pro et Enterprise. Paiement Mobile Money (MTN, Orange, Wave). Sans frais cachés.",
+          "Tarifs SMS dégressifs : 25 FCFA de 200 à 999 SMS, 20 FCFA de 1 000 à 9 999, 15 FCFA de 10 000 à 99 999, 12 FCFA au-delà de 100 000. Paiement Mobile Money (MTN, Orange, Wave). Sans frais cachés.",
       },
       {
         property: "og:title",
-        content: "Tarifs SMS en FCFA — Packages transparents à partir de 7 500 FCFA",
+        content: "Tarifs SMS dégressifs en FCFA — de 25 à 12 FCFA par SMS",
       },
       {
         property: "og:description",
