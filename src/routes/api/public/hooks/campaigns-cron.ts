@@ -1,7 +1,7 @@
 /**
  * Cron endpoint — processes scheduled + recurring campaigns.
  * Call every minute from pg_cron via net.http_post.
- * Auth: Supabase anon key in `apikey` header (route lives under /api/public/*).
+ * Auth: shared secret in `x-cron-secret` header (must match CAMPAIGNS_CRON_SECRET).
  */
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -15,9 +15,24 @@ function nextRunFor(recurrence: string | null, from: Date): Date | null {
   return d;
 }
 
-async function handle() {
-  const anon = process.env.SUPABASE_PUBLISHABLE_KEY;
-  if (!anon) return new Response("no key", { status: 503 });
+function isAuthorized(request: Request): boolean {
+  const expected = process.env.CAMPAIGNS_CRON_SECRET;
+  if (!expected) return false;
+  const provided =
+    request.headers.get("x-cron-secret") ??
+    request.headers.get("authorization")?.replace(/^Bearer /, "") ??
+    "";
+  if (provided.length !== expected.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) diff |= provided.charCodeAt(i) ^ expected.charCodeAt(i);
+  return diff === 0;
+}
+
+async function handle(request: Request) {
+  if (!isAuthorized(request)) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { sendCampaignViaNMGroupe } = await import("@/lib/nmgroupe.server");
