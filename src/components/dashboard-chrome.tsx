@@ -16,6 +16,8 @@ const NAV: NavItem[] = [
   { to: "/admin", label: "— Admin —", admin: true },
   { to: "/admin/users", label: "Utilisateurs", admin: true },
   { to: "/admin/packages", label: "Packages", admin: true },
+  { to: "/admin/pricing", label: "Paliers tarifaires", admin: true },
+
   { to: "/admin/orders", label: "Toutes commandes", admin: true },
   { to: "/admin/campaigns", label: "Toutes campagnes", admin: true },
   { to: "/admin/contacts", label: "Messages contact", admin: true },
