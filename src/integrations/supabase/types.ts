@@ -77,6 +77,45 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_label: string | null
+          actor_user_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          ip_address: string | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_label?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_label?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       campaign_executions: {
         Row: {
           campaign_id: string
@@ -455,6 +494,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_tiers: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          label: string
+          max_sms: number | null
+          min_sms: number
+          sort_order: number
+          unit_price_fcfa: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label: string
+          max_sms?: number | null
+          min_sms: number
+          sort_order?: number
+          unit_price_fcfa: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label?: string
+          max_sms?: number | null
+          min_sms?: number
+          sort_order?: number
+          unit_price_fcfa?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company: string | null
@@ -496,6 +571,155 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      signup_applications: {
+        Row: {
+          admin_notes: string | null
+          certified_at: string | null
+          city: string | null
+          civility: string | null
+          client_type: string
+          client_type_other: string | null
+          country: string
+          created_at: string
+          documents: Json
+          documents_checked_at: string | null
+          documents_validation_status: string
+          email: string
+          first_name: string
+          gdpr_consent_at: string | null
+          id: string
+          id_document_type: string | null
+          is_legal_representative: boolean
+          job_title: string | null
+          last_name: string
+          mobile: string
+          package_slug: string | null
+          representative: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          sample_message: string | null
+          sender_id: string
+          status: string
+          structure: string | null
+          tracking_code: string
+          updated_at: string
+          user_id: string | null
+          website: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          certified_at?: string | null
+          city?: string | null
+          civility?: string | null
+          client_type: string
+          client_type_other?: string | null
+          country: string
+          created_at?: string
+          documents?: Json
+          documents_checked_at?: string | null
+          documents_validation_status?: string
+          email: string
+          first_name: string
+          gdpr_consent_at?: string | null
+          id?: string
+          id_document_type?: string | null
+          is_legal_representative?: boolean
+          job_title?: string | null
+          last_name: string
+          mobile: string
+          package_slug?: string | null
+          representative?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sample_message?: string | null
+          sender_id: string
+          status?: string
+          structure?: string | null
+          tracking_code?: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          certified_at?: string | null
+          city?: string | null
+          civility?: string | null
+          client_type?: string
+          client_type_other?: string | null
+          country?: string
+          created_at?: string
+          documents?: Json
+          documents_checked_at?: string | null
+          documents_validation_status?: string
+          email?: string
+          first_name?: string
+          gdpr_consent_at?: string | null
+          id?: string
+          id_document_type?: string | null
+          is_legal_representative?: boolean
+          job_title?: string | null
+          last_name?: string
+          mobile?: string
+          package_slug?: string | null
+          representative?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sample_message?: string | null
+          sender_id?: string
+          status?: string
+          structure?: string | null
+          tracking_code?: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      sms_delivery_attempts: {
+        Row: {
+          attempt_number: number
+          attempted_at: string
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          id: string
+          latency_ms: number | null
+          message_id: string
+          provider_status: string
+        }
+        Insert: {
+          attempt_number: number
+          attempted_at?: string
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          message_id: string
+          provider_status: string
+        }
+        Update: {
+          attempt_number?: number
+          attempted_at?: string
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          message_id?: string
+          provider_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_delivery_attempts_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "sms_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sms_messages: {
         Row: {
@@ -550,6 +774,36 @@ export type Database = {
           },
         ]
       }
+      sms_templates: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       system_settings: {
         Row: {
           key: string
@@ -589,12 +843,63 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          attempt_count: number
+          created_at: string
+          error_message: string | null
+          event_type: string
+          external_id: string | null
+          id: string
+          latency_ms: number | null
+          next_retry_at: string | null
+          payload_summary: Json
+          processed_at: string | null
+          provider: string
+          received_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempt_count?: number
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          external_id?: string | null
+          id?: string
+          latency_ms?: number | null
+          next_retry_at?: string | null
+          payload_summary?: Json
+          processed_at?: string | null
+          provider: string
+          received_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempt_count?: number
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          external_id?: string | null
+          id?: string
+          latency_ms?: number | null
+          next_retry_at?: string | null
+          payload_summary?: Json
+          processed_at?: string | null
+          provider?: string
+          received_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      autopublish_news: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "client"
