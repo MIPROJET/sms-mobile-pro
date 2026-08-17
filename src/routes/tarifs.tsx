@@ -124,13 +124,16 @@ function TarifsPage() {
                     {t.label}
                   </div>
                   <div className="font-display text-xl font-extrabold mt-1">
-                    {t.unit_price_fcfa}{" "}
+                    {t.unit_price_fcfa.toLocaleString("fr-FR")}{" "}
                     <span className="text-xs font-normal opacity-70">FCFA / SMS</span>
                   </div>
                 </div>
               ))}
             </div>
+
+            <TierSimulator tiers={tiers} />
           </div>
+
 
 
 
