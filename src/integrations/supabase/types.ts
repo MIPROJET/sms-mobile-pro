@@ -14,7 +14,221 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaigns: {
+        Row: {
+          created_at: string
+          delivered_count: number
+          failed_count: number
+          id: string
+          last_run_at: string | null
+          message: string
+          name: string
+          next_run_at: string | null
+          recipients: Json
+          recurrence: string | null
+          recurrence_end: string | null
+          scheduled_at: string | null
+          sender_id: string
+          sent_count: number
+          status: string
+          timezone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivered_count?: number
+          failed_count?: number
+          id?: string
+          last_run_at?: string | null
+          message: string
+          name: string
+          next_run_at?: string | null
+          recipients?: Json
+          recurrence?: string | null
+          recurrence_end?: string | null
+          scheduled_at?: string | null
+          sender_id: string
+          sent_count?: number
+          status?: string
+          timezone?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivered_count?: number
+          failed_count?: number
+          id?: string
+          last_run_at?: string | null
+          message?: string
+          name?: string
+          next_run_at?: string | null
+          recipients?: Json
+          recurrence?: string | null
+          recurrence_end?: string | null
+          scheduled_at?: string | null
+          sender_id?: string
+          sent_count?: number
+          status?: string
+          timezone?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          amount_fcfa: number
+          created_at: string
+          id: string
+          package_id: string
+          provider: string | null
+          provider_payload: Json | null
+          provider_transaction_id: string | null
+          sms_volume: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_fcfa: number
+          created_at?: string
+          id?: string
+          package_id: string
+          provider?: string | null
+          provider_payload?: Json | null
+          provider_transaction_id?: string | null
+          sms_volume: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_fcfa?: number
+          created_at?: string
+          id?: string
+          package_id?: string
+          provider?: string | null
+          provider_payload?: Json | null
+          provider_transaction_id?: string | null
+          sms_volume?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packages: {
+        Row: {
+          active: boolean
+          created_at: string
+          featured: boolean
+          features: Json
+          id: string
+          name: string
+          price_fcfa: number
+          slug: string
+          sms_volume: number
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          featured?: boolean
+          features?: Json
+          id?: string
+          name: string
+          price_fcfa: number
+          slug: string
+          sms_volume: number
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          featured?: boolean
+          features?: Json
+          id?: string
+          name?: string
+          price_fcfa?: number
+          slug?: string
+          sms_volume?: number
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          gdpr_consent_at: string | null
+          id: string
+          marketing_consent: boolean
+          phone: string | null
+          sms_credits: number
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          gdpr_consent_at?: string | null
+          id: string
+          marketing_consent?: boolean
+          phone?: string | null
+          sms_credits?: number
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          gdpr_consent_at?: string | null
+          id?: string
+          marketing_consent?: boolean
+          phone?: string | null
+          sms_credits?: number
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +237,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +364,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "client"],
+    },
   },
 } as const
