@@ -1,7 +1,47 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site-chrome";
 import { listPackages } from "@/lib/packages.functions";
 import { listPricingTiers } from "@/lib/pricing.functions";
+import { findTier, estimateCost, formatFcfa, formatUnitPrice, type PricingTier } from "@/lib/pricing";
+
+function TierSimulator({ tiers }: { tiers: PricingTier[] }) {
+  const [value, setValue] = useState("1000");
+  const volume = Number(value);
+  const tier = findTier(tiers, volume);
+  const total = estimateCost(tiers, volume);
+  return (
+    <div className="mt-6 bg-background/5 border border-background/10 p-5 rounded-sm">
+      <div className="text-[10px] font-mono uppercase tracking-widest text-background/50 mb-3">
+        Estimez votre budget
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <input
+          type="number"
+          min={1}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          aria-label="Nombre de SMS"
+          className="w-40 px-3 py-2 rounded-sm text-sm font-mono bg-background text-foreground border border-background/20"
+        />
+        <span className="text-sm opacity-80">SMS</span>
+        {tier ? (
+          <>
+            <span className="text-sm font-semibold">
+              {tier.label} · {formatUnitPrice(tier.unit_price_fcfa)}
+            </span>
+            {total !== null && (
+              <span className="font-display text-xl font-extrabold">= {formatFcfa(total)}</span>
+            )}
+          </>
+        ) : (
+          <span className="text-sm opacity-70">Indiquez un volume de SMS</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 export const Route = createFileRoute("/tarifs")({
   component: TarifsPage,
