@@ -6,6 +6,8 @@ import { SiteLayout } from "@/components/site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 import { submitSignupApplication } from "@/lib/signup.functions";
 import { listPackages } from "@/lib/packages.functions";
+import { validatePasswordPolicy } from "@/lib/password-policy";
+import { checkPasswordCompromised } from "@/lib/password.functions";
 import {
   CLIENT_TYPES, COUNTRIES, ID_TYPES, PRICING_TIERS, representativeDocs, structureDocs,
   type DocSpec,
