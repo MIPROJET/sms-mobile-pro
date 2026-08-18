@@ -95,7 +95,11 @@ function SignupPage() {
       if (missing.length) return `Pièce d'identité incomplète : ${missing.map((m) => m.label).join(", ")}`;
     }
     if (step === 4 && !certified) return "Veuillez certifier l'exactitude des informations.";
-    if (step === 5 && (f.password.length < 8 || !gdprConsent)) return "Mot de passe valide et consentement RGPD obligatoires.";
+    if (step === 5) {
+      const policyError = validatePasswordPolicy(f.password);
+      if (policyError) return policyError;
+      if (!gdprConsent) return "Le consentement RGPD est obligatoire.";
+    }
     return null;
   }
 
