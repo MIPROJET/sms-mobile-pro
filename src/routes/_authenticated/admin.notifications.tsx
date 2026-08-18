@@ -1,0 +1,75 @@
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DashboardLayout } from "@/components/dashboard-chrome";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchRoles } from "@/lib/auth";
+import { listAdminNotifications, markNotificationRead, deleteNotification } from "@/lib/notifications.functions";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/_authenticated/admin/notifications")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const roles = await fetchRoles(data.user.id);
+    if (!roles.includes("admin")) throw redirect({ to: "/dashboard" });
+  },
+  component: NotificationsAdmin,
+  head: () => ({ meta: [{ title: "Admin · Notifications" }, { name: "robots", content: "noindex" }] }),
+});
+
+function NotificationsAdmin() {
+  const qc = useQueryClient();
+  const { data: rows = [] } = useQuery({
+    queryKey: ["admin-notifications"],
+    queryFn: () => listAdminNotifications(),
+    refetchInterval: 30000,
+  });
+
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-notifications"] });
+  const read = useMutation({
+    mutationFn: (v: { id: string; read: boolean }) => markNotificationRead({ data: v }),
+    onSuccess: invalidate,
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const del = useMutation({
+    mutationFn: (id: string) => deleteNotification({ data: { id } }),
+    onSuccess: () => { invalidate(); toast.success("Notification supprimée"); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <DashboardLayout title="Notifications">
+      <div className="bg-background border border-border rounded-sm overflow-hidden">
+        {(rows as any[]).length === 0 && (
+          <div className="p-6 text-sm text-foreground/50">Aucune notification.</div>
+        )}
+        {(rows as any[]).map((n) => (
+          <div key={n.id} className={`p-4 border-b border-border last:border-b-0 flex flex-wrap gap-3 justify-between ${n.read_at ? "opacity-60" : ""}`}>
+            <div className="min-w-0">
+              <div className="font-semibold text-sm">{n.title}</div>
+              <div className="text-xs text-foreground/60 whitespace-pre-wrap mt-1">{n.body}</div>
+              <div className="text-[10px] font-mono text-foreground/40 mt-1">
+                {new Date(n.created_at).toLocaleString("fr-FR")} · {n.kind}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {n.link && (
+                <Link to={n.link} className="text-xs px-3 py-1.5 bg-primary text-primary-foreground rounded-sm">
+                  Traiter
+                </Link>
+              )}
+              <button onClick={() => read.mutate({ id: n.id, read: !n.read_at })}
+                className="text-xs px-3 py-1.5 border border-border rounded-sm hover:bg-muted">
+                {n.read_at ? "Marquer non lu" : "Marquer lu"}
+              </button>
+              <button onClick={() => del.mutate(n.id)}
+                className="text-xs px-3 py-1.5 border border-border rounded-sm hover:bg-muted">
+                Supprimer
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </DashboardLayout>
+  );
+}
