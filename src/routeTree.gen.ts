@@ -39,6 +39,7 @@ import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin.pricing'
 import { Route as AuthenticatedAdminPackagesRouteImport } from './routes/_authenticated/admin.packages'
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
+import { Route as AuthenticatedAdminNotificationsRouteImport } from './routes/_authenticated/admin.notifications'
 import { Route as AuthenticatedAdminNewsCategoriesRouteImport } from './routes/_authenticated/admin.news-categories'
 import { Route as AuthenticatedAdminNewsRouteImport } from './routes/_authenticated/admin.news'
 import { Route as AuthenticatedAdminHeroRouteImport } from './routes/_authenticated/admin.hero'
@@ -210,6 +211,12 @@ const AuthenticatedAdminOrdersRoute =
     path: '/admin/orders',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminNotificationsRoute =
+  AuthenticatedAdminNotificationsRouteImport.update({
+    id: '/admin/notifications',
+    path: '/admin/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminNewsCategoriesRoute =
   AuthenticatedAdminNewsCategoriesRouteImport.update({
     id: '/admin/news-categories',
@@ -295,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/admin/hero': typeof AuthenticatedAdminHeroRoute
   '/admin/news': typeof AuthenticatedAdminNewsRoute
   '/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/packages': typeof AuthenticatedAdminPackagesRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
@@ -337,6 +345,7 @@ export interface FileRoutesByTo {
   '/admin/hero': typeof AuthenticatedAdminHeroRoute
   '/admin/news': typeof AuthenticatedAdminNewsRoute
   '/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/packages': typeof AuthenticatedAdminPackagesRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
@@ -381,6 +390,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/hero': typeof AuthenticatedAdminHeroRoute
   '/_authenticated/admin/news': typeof AuthenticatedAdminNewsRoute
   '/_authenticated/admin/news-categories': typeof AuthenticatedAdminNewsCategoriesRoute
+  '/_authenticated/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/packages': typeof AuthenticatedAdminPackagesRoute
   '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
@@ -425,6 +435,7 @@ export interface FileRouteTypes {
     | '/admin/hero'
     | '/admin/news'
     | '/admin/news-categories'
+    | '/admin/notifications'
     | '/admin/orders'
     | '/admin/packages'
     | '/admin/pricing'
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '/admin/hero'
     | '/admin/news'
     | '/admin/news-categories'
+    | '/admin/notifications'
     | '/admin/orders'
     | '/admin/packages'
     | '/admin/pricing'
@@ -510,6 +522,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/hero'
     | '/_authenticated/admin/news'
     | '/_authenticated/admin/news-categories'
+    | '/_authenticated/admin/notifications'
     | '/_authenticated/admin/orders'
     | '/_authenticated/admin/packages'
     | '/_authenticated/admin/pricing'
@@ -766,6 +779,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/notifications': {
+      id: '/_authenticated/admin/notifications'
+      path: '/admin/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AuthenticatedAdminNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/news-categories': {
       id: '/_authenticated/admin/news-categories'
       path: '/admin/news-categories'
@@ -852,6 +872,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminHeroRoute: typeof AuthenticatedAdminHeroRoute
   AuthenticatedAdminNewsRoute: typeof AuthenticatedAdminNewsRoute
   AuthenticatedAdminNewsCategoriesRoute: typeof AuthenticatedAdminNewsCategoriesRoute
+  AuthenticatedAdminNotificationsRoute: typeof AuthenticatedAdminNotificationsRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
   AuthenticatedAdminPackagesRoute: typeof AuthenticatedAdminPackagesRoute
   AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
@@ -873,6 +894,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminHeroRoute: AuthenticatedAdminHeroRoute,
   AuthenticatedAdminNewsRoute: AuthenticatedAdminNewsRoute,
   AuthenticatedAdminNewsCategoriesRoute: AuthenticatedAdminNewsCategoriesRoute,
+  AuthenticatedAdminNotificationsRoute: AuthenticatedAdminNotificationsRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
   AuthenticatedAdminPackagesRoute: AuthenticatedAdminPackagesRoute,
   AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
