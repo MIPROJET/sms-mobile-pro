@@ -34,10 +34,15 @@ function ResetPasswordPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 6) return toast.error("Mot de passe trop court (6 min).");
+    const policyError = validatePasswordPolicy(password);
+    if (policyError) return toast.error(policyError);
     if (password !== confirm) return toast.error("Les mots de passe ne correspondent pas.");
     setLoading(true);
     try {
+      const leak = await checkPasswordCompromised({ data: { password } });
+      if (leak.compromised) {
+        throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
+      }
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       toast.success("Mot de passe mis à jour. Vous êtes connecté.");
