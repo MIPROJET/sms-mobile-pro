@@ -60,6 +60,41 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
       })
       .eq("id", context.userId);
 
+    // Notifie l'administrateur avec l'intégralité du dossier
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const body = [
+        `Client : ${application.civility ?? ""} ${application.first_name} ${application.last_name}`.trim(),
+        `Email : ${application.email}`,
+        `Mobile : ${application.mobile}`,
+        `Pays / Ville : ${application.country}${application.city ? ` · ${application.city}` : ""}`,
+        `Fonction : ${application.job_title || "—"}`,
+        `Structure : ${application.structure || "—"}`,
+        `Type de client : ${application.client_type}${application.client_type_other ? ` (${application.client_type_other})` : ""}`,
+        `Site internet : ${application.website || "—"}`,
+        `Nom d'expéditeur : ${application.sender_id}`,
+        `Pack : ${application.package_slug || "—"}`,
+        `Exemple de message : ${application.sample_message || "—"}`,
+        `Pièce d'identité : ${application.id_document_type}`,
+        `Représentant légal : ${application.is_legal_representative ? "le titulaire du compte" : JSON.stringify(application.representative)}`,
+        `Documents (${application.documents.length}) : ${application.documents.map((d) => `${d.label} → ${d.name}`).join(" | ")}`,
+      ].join("\n");
+
+      await supabaseAdmin.from("notifications").insert({
+        audience: "admin",
+        kind: "signup",
+        title: `Nouveau dossier d'inscription — ${application.structure || `${application.first_name} ${application.last_name}`}`,
+        body,
+        link: "/admin/signups",
+        payload: application as never,
+      } as never);
+
+      const { sendAdminSignupEmail } = await import("./notifications.server");
+      await sendAdminSignupEmail(body, application.email);
+    } catch {
+      /* la notification ne doit jamais bloquer la soumission du dossier */
+    }
+
     return { ok: true };
   });
 

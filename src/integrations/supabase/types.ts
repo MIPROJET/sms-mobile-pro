@@ -405,6 +405,45 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          audience: string
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          payload: Json
+          read_at: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          audience?: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          payload?: Json
+          read_at?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          audience?: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          payload?: Json
+          read_at?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount_fcfa: number
