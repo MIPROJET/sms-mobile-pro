@@ -116,6 +116,10 @@ function SignupPage() {
     if (err) return toast.error(err);
     setBusy(true);
     try {
+      const leak = await checkPasswordCompromised({ data: { password: f.password } });
+      if (leak.compromised) {
+        throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
+      }
       const { data: signed, error: signErr } = await supabase.auth.signUp({
         email: f.email.trim().toLowerCase(),
         password: f.password,
