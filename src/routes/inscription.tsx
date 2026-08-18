@@ -6,6 +6,8 @@ import { SiteLayout } from "@/components/site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 import { submitSignupApplication } from "@/lib/signup.functions";
 import { listPackages } from "@/lib/packages.functions";
+import { validatePasswordPolicy } from "@/lib/password-policy";
+import { checkPasswordCompromised } from "@/lib/password.functions";
 import {
   CLIENT_TYPES, COUNTRIES, ID_TYPES, PRICING_TIERS, representativeDocs, structureDocs,
   type DocSpec,
@@ -95,7 +97,11 @@ function SignupPage() {
       if (missing.length) return `Pièce d'identité incomplète : ${missing.map((m) => m.label).join(", ")}`;
     }
     if (step === 4 && !certified) return "Veuillez certifier l'exactitude des informations.";
-    if (step === 5 && (f.password.length < 8 || !gdprConsent)) return "Mot de passe valide et consentement RGPD obligatoires.";
+    if (step === 5) {
+      const policyError = validatePasswordPolicy(f.password);
+      if (policyError) return policyError;
+      if (!gdprConsent) return "Le consentement RGPD est obligatoire.";
+    }
     return null;
   }
 
@@ -110,6 +116,10 @@ function SignupPage() {
     if (err) return toast.error(err);
     setBusy(true);
     try {
+      const leak = await checkPasswordCompromised({ data: { password: f.password } });
+      if (leak.compromised) {
+        throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
+      }
       const { data: signed, error: signErr } = await supabase.auth.signUp({
         email: f.email.trim().toLowerCase(),
         password: f.password,
