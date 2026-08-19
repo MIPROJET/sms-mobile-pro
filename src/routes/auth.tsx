@@ -38,6 +38,10 @@ function AuthPage() {
   const targetPath = sanitizeRedirect(redirect);
 
   useEffect(() => {
+    if (initialMode === "signup") navigate({ to: "/inscription", replace: true });
+  }, [initialMode, navigate]);
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         navigate({ to: targetPath as any, replace: true });
