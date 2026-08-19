@@ -33,7 +33,7 @@ export const loginWithIdentifier = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const email = await resolveEmail(data.identifier);
-    if (!email) throw new Error(GENERIC_LOGIN_ERROR);
+    if (!email) return { ok: false as const, error: GENERIC_LOGIN_ERROR };
 
     const { createClient } = await import("@supabase/supabase-js");
     const url = process.env.SUPABASE_URL;
@@ -58,9 +58,10 @@ export const loginWithIdentifier = createServerFn({ method: "POST" })
       email,
       password: data.password,
     });
-    if (error || !result.session) throw new Error(GENERIC_LOGIN_ERROR);
+    if (error || !result.session) return { ok: false as const, error: GENERIC_LOGIN_ERROR };
 
     return {
+      ok: true as const,
       access_token: result.session.access_token,
       refresh_token: result.session.refresh_token,
     };

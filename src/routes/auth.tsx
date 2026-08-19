@@ -77,6 +77,10 @@ function AuthPage() {
         toast.success("Compte créé. Vous êtes connecté.");
       } else {
         const session = await loginWithIdentifier({ data: { identifier, password } });
+        if (!session.ok) {
+          toast.error(session.error);
+          return;
+        }
         const { error } = await supabase.auth.setSession({
           access_token: session.access_token,
           refresh_token: session.refresh_token,
