@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-r
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions";
 import { toast } from "sonner";
 
@@ -74,7 +73,9 @@ function AuthPage() {
           const { recordConsent } = await import("@/lib/account.functions");
           await recordConsent({ data: { marketing } });
         } catch { /* profile trigger may not be ready yet; ignore */ }
-        toast.success("Compte créé. Vous êtes connecté.");
+        toast.success("Compte créé. Complétez votre dossier d'inscription.");
+        navigate({ to: "/inscription", replace: true });
+        return;
       } else {
         const session = await loginWithIdentifier({ data: { identifier, password } });
         if (!session.ok) {
@@ -114,27 +115,6 @@ function AuthPage() {
   }
 
 
-  async function handleGoogle() {
-    setLoading(true);
-    try {
-      sessionStorage.setItem("smspro_auth_redirect", targetPath);
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: buildOAuthRedirectUri(targetPath),
-        extraParams: { prompt: "select_account" },
-      });
-      if (result.error) {
-        toast.error("Erreur Google: " + (result.error as any).message);
-        setLoading(false);
-        return;
-      }
-      if (result.redirected) return;
-      navigate({ to: targetPath as any, replace: true });
-    } catch (err: any) {
-      toast.error(err.message ?? "Erreur Google");
-      setLoading(false);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border">
@@ -158,25 +138,6 @@ function AuthPage() {
               ? "Connectez-vous avec votre email ou l'identifiant super admin smsmobilepro."
               : "Créez votre compte client, puis gérez vos campagnes depuis le tableau de bord."}
           </p>
-
-          <button
-            type="button"
-            onClick={handleGoogle}
-            disabled={loading}
-            className="w-full mb-4 py-3 border border-border rounded-sm font-semibold text-sm hover:bg-muted transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            <svg width="18" height="18" viewBox="0 0 48 48">
-              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.2 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.3-.1-3.5z"/>
-              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.2 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.2-7.5l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/>
-              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.4-2.3 4.4-4.2 5.8l6.2 5.2C41 34.9 44 30 44 24c0-1.3-.1-2.3-.4-3.5z"/>
-            </svg>
-            Continuer avec Google
-          </button>
-
-          <div className="flex items-center gap-3 my-4 text-[10px] font-mono uppercase tracking-widest text-foreground/40">
-            <div className="flex-1 h-px bg-border" /> ou <div className="flex-1 h-px bg-border" />
-          </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === "signup" && (
@@ -224,7 +185,7 @@ function AuthPage() {
           <div className="mt-6 text-sm text-foreground/60 text-center">
             {mode === "login" ? (
               <>Pas encore de compte ?{" "}
-                <button className="text-primary font-semibold hover:underline" onClick={() => setMode("signup")}>Créer un compte</button>
+                <Link to="/inscription" className="text-primary font-semibold hover:underline">Créer un compte</Link>
               </>
             ) : (
               <>Déjà un compte ?{" "}
@@ -241,14 +202,4 @@ function AuthPage() {
 function sanitizeRedirect(value?: string) {
   if (!value || !value.startsWith("/") || value.startsWith("//")) return "/dashboard";
   return value;
-}
-
-function buildOAuthRedirectUri(targetPath: string) {
-  const hostedOrigin = "https://smsmobilepro.lovable.app";
-  const current = new URL(window.location.href);
-  const hosted = current.hostname.endsWith(".lovable.app") || current.hostname.endsWith(".lovable.dev");
-  const origin = hosted ? current.origin : hostedOrigin;
-  const callback = new URL("/auth/callback", origin);
-  callback.searchParams.set("redirect", targetPath);
-  return callback.toString();
 }
