@@ -25,7 +25,9 @@ const NAV: NavItem[] = [
   { to: "/admin/news-categories", label: "Catégories & tags", admin: true },
   { to: "/admin/hero", label: "Carousel Hero", admin: true },
   { to: "/admin/signups", label: "Dossiers d'inscription", admin: true },
+  { to: "/admin/notifications", label: "Notifications", admin: true },
   { to: "/admin/settings", label: "Paramètres système", admin: true },
+
 ];
 
 
