@@ -58,9 +58,10 @@ export const loginWithIdentifier = createServerFn({ method: "POST" })
       email,
       password: data.password,
     });
-    if (error || !result.session) throw new Error(GENERIC_LOGIN_ERROR);
+    if (error || !result.session) return { ok: false as const, error: GENERIC_LOGIN_ERROR };
 
     return {
+      ok: true as const,
       access_token: result.session.access_token,
       refresh_token: result.session.refresh_token,
     };
