@@ -166,7 +166,7 @@ function AuthPage() {
               </>
             )}
             <input required type={mode === "signup" ? "email" : "text"} value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder={mode === "signup" ? "Email" : "Email ou identifiant"} autoComplete="username" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
-            <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 6)" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+            <input required type="password" minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 10)" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
 
             {mode === "signup" && (
               <div className="space-y-2 pt-1">
