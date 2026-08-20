@@ -410,11 +410,15 @@ export type Database = {
           audience: string
           body: string | null
           created_at: string
+          email_error: string | null
+          email_sent_at: string | null
+          email_status: string
           id: string
           kind: string
           link: string | null
           payload: Json
           read_at: string | null
+          signup_application_id: string | null
           title: string
           user_id: string | null
         }
@@ -422,11 +426,15 @@ export type Database = {
           audience?: string
           body?: string | null
           created_at?: string
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string
           id?: string
           kind?: string
           link?: string | null
           payload?: Json
           read_at?: string | null
+          signup_application_id?: string | null
           title: string
           user_id?: string | null
         }
@@ -434,15 +442,27 @@ export type Database = {
           audience?: string
           body?: string | null
           created_at?: string
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string
           id?: string
           kind?: string
           link?: string | null
           payload?: Json
           read_at?: string | null
+          signup_application_id?: string | null
           title?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_signup_application_id_fkey"
+            columns: ["signup_application_id"]
+            isOneToOne: false
+            referencedRelation: "signup_applications"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       orders: {
         Row: {
@@ -621,6 +641,8 @@ export type Database = {
           client_type_other: string | null
           country: string
           created_at: string
+          credited_at: string | null
+          credited_sms: number
           documents: Json
           documents_checked_at: string | null
           documents_validation_status: string
@@ -655,6 +677,8 @@ export type Database = {
           client_type_other?: string | null
           country: string
           created_at?: string
+          credited_at?: string | null
+          credited_sms?: number
           documents?: Json
           documents_checked_at?: string | null
           documents_validation_status?: string
@@ -689,6 +713,8 @@ export type Database = {
           client_type_other?: string | null
           country?: string
           created_at?: string
+          credited_at?: string | null
+          credited_sms?: number
           documents?: Json
           documents_checked_at?: string | null
           documents_validation_status?: string

@@ -14,6 +14,7 @@ import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as DeveloppeursRouteImport } from './routes/developpeurs'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ConditionsRouteImport } from './routes/conditions'
@@ -45,6 +46,7 @@ import { Route as AuthenticatedAdminNewsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminHeroRouteImport } from './routes/_authenticated/admin.hero'
 import { Route as AuthenticatedAdminContactsRouteImport } from './routes/_authenticated/admin.contacts'
 import { Route as AuthenticatedAdminCampaignsRouteImport } from './routes/_authenticated/admin.campaigns'
+import { Route as ApiPublicWebhooksNtouchRouteImport } from './routes/api/public/webhooks/ntouch'
 import { Route as ApiPublicWebhooksNmgroupeRouteImport } from './routes/api/public/webhooks/nmgroupe'
 import { Route as ApiPublicWebhooksFedapayRouteImport } from './routes/api/public/webhooks/fedapay'
 import { Route as ApiPublicWebhooksCinetpayRouteImport } from './routes/api/public/webhooks/cinetpay'
@@ -75,6 +77,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const InscriptionRoute = InscriptionRouteImport.update({
   id: '/inscription',
   path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeveloppeursRoute = DeveloppeursRouteImport.update({
+  id: '/developpeurs',
+  path: '/developpeurs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -245,6 +252,11 @@ const AuthenticatedAdminCampaignsRoute =
     path: '/admin/campaigns',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicWebhooksNtouchRoute = ApiPublicWebhooksNtouchRouteImport.update({
+  id: '/api/public/webhooks/ntouch',
+  path: '/api/public/webhooks/ntouch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksNmgroupeRoute =
   ApiPublicWebhooksNmgroupeRouteImport.update({
     id: '/api/public/webhooks/nmgroupe',
@@ -289,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -323,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
   '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
   '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
+  '/api/public/webhooks/ntouch': typeof ApiPublicWebhooksNtouchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -332,6 +346,7 @@ export interface FileRoutesByTo {
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -366,6 +381,7 @@ export interface FileRoutesByTo {
   '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
   '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
   '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
+  '/api/public/webhooks/ntouch': typeof ApiPublicWebhooksNtouchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -377,6 +393,7 @@ export interface FileRoutesById {
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/developpeurs': typeof DeveloppeursRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -411,6 +428,7 @@ export interface FileRoutesById {
   '/api/public/webhooks/cinetpay': typeof ApiPublicWebhooksCinetpayRoute
   '/api/public/webhooks/fedapay': typeof ApiPublicWebhooksFedapayRoute
   '/api/public/webhooks/nmgroupe': typeof ApiPublicWebhooksNmgroupeRoute
+  '/api/public/webhooks/ntouch': typeof ApiPublicWebhooksNtouchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -422,6 +440,7 @@ export interface FileRouteTypes {
     | '/conditions'
     | '/confidentialite'
     | '/contact'
+    | '/developpeurs'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -456,6 +475,7 @@ export interface FileRouteTypes {
     | '/api/public/webhooks/cinetpay'
     | '/api/public/webhooks/fedapay'
     | '/api/public/webhooks/nmgroupe'
+    | '/api/public/webhooks/ntouch'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -465,6 +485,7 @@ export interface FileRouteTypes {
     | '/conditions'
     | '/confidentialite'
     | '/contact'
+    | '/developpeurs'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -499,6 +520,7 @@ export interface FileRouteTypes {
     | '/api/public/webhooks/cinetpay'
     | '/api/public/webhooks/fedapay'
     | '/api/public/webhooks/nmgroupe'
+    | '/api/public/webhooks/ntouch'
   id:
     | '__root__'
     | '/'
@@ -509,6 +531,7 @@ export interface FileRouteTypes {
     | '/conditions'
     | '/confidentialite'
     | '/contact'
+    | '/developpeurs'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -543,6 +566,7 @@ export interface FileRouteTypes {
     | '/api/public/webhooks/cinetpay'
     | '/api/public/webhooks/fedapay'
     | '/api/public/webhooks/nmgroupe'
+    | '/api/public/webhooks/ntouch'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -554,6 +578,7 @@ export interface RootRouteChildren {
   ConditionsRoute: typeof ConditionsRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
+  DeveloppeursRoute: typeof DeveloppeursRoute
   InscriptionRoute: typeof InscriptionRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -565,6 +590,7 @@ export interface RootRouteChildren {
   ApiPublicWebhooksCinetpayRoute: typeof ApiPublicWebhooksCinetpayRoute
   ApiPublicWebhooksFedapayRoute: typeof ApiPublicWebhooksFedapayRoute
   ApiPublicWebhooksNmgroupeRoute: typeof ApiPublicWebhooksNmgroupeRoute
+  ApiPublicWebhooksNtouchRoute: typeof ApiPublicWebhooksNtouchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -602,6 +628,13 @@ declare module '@tanstack/react-router' {
       path: '/inscription'
       fullPath: '/inscription'
       preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/developpeurs': {
+      id: '/developpeurs'
+      path: '/developpeurs'
+      fullPath: '/developpeurs'
+      preLoaderRoute: typeof DeveloppeursRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -821,6 +854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCampaignsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/webhooks/ntouch': {
+      id: '/api/public/webhooks/ntouch'
+      path: '/api/public/webhooks/ntouch'
+      fullPath: '/api/public/webhooks/ntouch'
+      preLoaderRoute: typeof ApiPublicWebhooksNtouchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/nmgroupe': {
       id: '/api/public/webhooks/nmgroupe'
       path: '/api/public/webhooks/nmgroupe'
@@ -949,6 +989,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConditionsRoute: ConditionsRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
+  DeveloppeursRoute: DeveloppeursRoute,
   InscriptionRoute: InscriptionRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -960,6 +1001,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicWebhooksCinetpayRoute: ApiPublicWebhooksCinetpayRoute,
   ApiPublicWebhooksFedapayRoute: ApiPublicWebhooksFedapayRoute,
   ApiPublicWebhooksNmgroupeRoute: ApiPublicWebhooksNmgroupeRoute,
+  ApiPublicWebhooksNtouchRoute: ApiPublicWebhooksNtouchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
