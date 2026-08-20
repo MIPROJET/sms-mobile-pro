@@ -55,9 +55,21 @@ function AuthPage() {
       toast.error("Vous devez accepter la politique de confidentialité pour créer un compte.");
       return;
     }
+    if (mode === "signup") {
+      const policyError = validatePasswordPolicy(password);
+      if (policyError) {
+        toast.error(policyError);
+        return;
+      }
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
+        const leak = await checkPasswordCompromised({ data: { password } });
+        if (leak.compromised) {
+          toast.error("Ce mot de passe apparaît dans une fuite de données connue. Choisissez-en un autre.");
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email: identifier.trim().toLowerCase(),
           password,
