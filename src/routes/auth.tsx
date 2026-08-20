@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions";
+import { validatePasswordPolicy } from "@/lib/password-policy";
+import { checkPasswordCompromised } from "@/lib/password.functions";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
@@ -55,9 +57,21 @@ function AuthPage() {
       toast.error("Vous devez accepter la politique de confidentialité pour créer un compte.");
       return;
     }
+    if (mode === "signup") {
+      const policyError = validatePasswordPolicy(password);
+      if (policyError) {
+        toast.error(policyError);
+        return;
+      }
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
+        const leak = await checkPasswordCompromised({ data: { password } });
+        if (leak.compromised) {
+          toast.error("Ce mot de passe apparaît dans une fuite de données connue. Choisissez-en un autre.");
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email: identifier.trim().toLowerCase(),
           password,
@@ -152,7 +166,7 @@ function AuthPage() {
               </>
             )}
             <input required type={mode === "signup" ? "email" : "text"} value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder={mode === "signup" ? "Email" : "Email ou identifiant"} autoComplete="username" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
-            <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 6)" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+            <input required type="password" minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 10)" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
 
             {mode === "signup" && (
               <div className="space-y-2 pt-1">
