@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions";
+import { validatePasswordPolicy } from "@/lib/password-policy";
+import { checkPasswordCompromised } from "@/lib/password.functions";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
