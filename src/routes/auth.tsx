@@ -6,6 +6,7 @@ import { loginWithIdentifier, requestPasswordReset } from "@/lib/auth.functions"
 import { validatePasswordPolicy } from "@/lib/password-policy";
 import { checkPasswordCompromised } from "@/lib/password.functions";
 import { toast } from "sonner";
+import { PasswordField } from "@/components/password-field";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -95,16 +96,22 @@ function AuthPage() {
         navigate({ to: "/inscription", replace: true });
         return;
       } else {
-        const session = await loginWithIdentifier({ data: { identifier, password } });
-        if (!session.ok) {
-          toast.error(session.error);
-          return;
+        const normalizedIdentifier = identifier.trim().toLowerCase();
+        if (normalizedIdentifier.includes("@")) {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: normalizedIdentifier,
+            password,
+          });
+          if (error) throw new Error("Identifiant ou mot de passe incorrect.");
+        } else {
+          const session = await loginWithIdentifier({ data: { identifier, password } });
+          if (!session.ok) throw new Error(session.error);
+          const { error } = await supabase.auth.setSession({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+          });
+          if (error) throw error;
         }
-        const { error } = await supabase.auth.setSession({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-        });
-        if (error) throw error;
         toast.success("Connexion réussie.");
       }
 
@@ -166,7 +173,7 @@ function AuthPage() {
               </>
             )}
             <input required type={mode === "signup" ? "email" : "text"} value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder={mode === "signup" ? "Email" : "Email ou identifiant"} autoComplete="username" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
-            <input required type="password" minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 10)" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+            <PasswordField required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min. 10)" autoComplete="current-password" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
 
             {mode === "signup" && (
               <div className="space-y-2 pt-1">

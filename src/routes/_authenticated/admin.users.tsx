@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchRoles } from "@/lib/auth";
 import { listUsers, updateUser, setUserRole, deleteUser, createUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
+import { PasswordField } from "@/components/password-field";
 
 export const Route = createFileRoute("/_authenticated/admin/users")({
   beforeLoad: async () => {
@@ -122,7 +123,7 @@ function NewUserForm({ onDone, onCancel }: { onDone: () => void; onCancel: () =>
   return (
     <form onSubmit={(e) => { e.preventDefault(); create.mutate(); }} className="bg-background border border-border rounded-sm p-5 mb-4 grid gap-3 sm:grid-cols-2">
       <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min 8)" className="px-3 py-2 border border-border rounded-sm text-sm" />
+      <PasswordField required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe (min 10)" className="w-full px-3 py-2 border border-border rounded-sm text-sm" />
       <input value={full_name} onChange={(e) => setName(e.target.value)} placeholder="Nom complet" className="px-3 py-2 border border-border rounded-sm text-sm" />
       <input type="number" min={0} value={credits} onChange={(e) => setCredits(Number(e.target.value))} placeholder="Crédits SMS" className="px-3 py-2 border border-border rounded-sm text-sm" />
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />Rôle administrateur</label>
