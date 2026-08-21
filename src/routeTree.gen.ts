@@ -14,6 +14,7 @@ import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as DocumentationRouteImport } from './routes/documentation'
 import { Route as DeveloppeursRouteImport } from './routes/developpeurs'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
@@ -77,6 +78,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const InscriptionRoute = InscriptionRouteImport.update({
   id: '/inscription',
   path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentationRoute = DocumentationRouteImport.update({
+  id: '/documentation',
+  path: '/documentation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DeveloppeursRoute = DeveloppeursRouteImport.update({
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/developpeurs': typeof DeveloppeursRoute
+  '/documentation': typeof DocumentationRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/developpeurs': typeof DeveloppeursRoute
+  '/documentation': typeof DocumentationRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -394,6 +402,7 @@ export interface FileRoutesById {
   '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/developpeurs': typeof DeveloppeursRoute
+  '/documentation': typeof DocumentationRoute
   '/inscription': typeof InscriptionRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -441,6 +450,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/developpeurs'
+    | '/documentation'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -486,6 +496,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/developpeurs'
+    | '/documentation'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -532,6 +543,7 @@ export interface FileRouteTypes {
     | '/confidentialite'
     | '/contact'
     | '/developpeurs'
+    | '/documentation'
     | '/inscription'
     | '/reset-password'
     | '/sitemap.xml'
@@ -579,6 +591,7 @@ export interface RootRouteChildren {
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
   DeveloppeursRoute: typeof DeveloppeursRoute
+  DocumentationRoute: typeof DocumentationRoute
   InscriptionRoute: typeof InscriptionRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -628,6 +641,13 @@ declare module '@tanstack/react-router' {
       path: '/inscription'
       fullPath: '/inscription'
       preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documentation': {
+      id: '/documentation'
+      path: '/documentation'
+      fullPath: '/documentation'
+      preLoaderRoute: typeof DocumentationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/developpeurs': {
@@ -990,6 +1010,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
   DeveloppeursRoute: DeveloppeursRoute,
+  DocumentationRoute: DocumentationRoute,
   InscriptionRoute: InscriptionRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
