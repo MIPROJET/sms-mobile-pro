@@ -8,50 +8,7 @@
 // This module is server-only.
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-
-type SendResult = {
-  status: "sent" | "queued" | "failed";
-  provider_message_id?: string;
-  error?: string;
-};
-
-async function sendSingleSms(params: {
-  to: string;
-  from: string;
-  message: string;
-}): Promise<SendResult> {
-  const apiUrl = process.env.NMGROUPE_API_URL;
-  const apiKey = process.env.NMGROUPE_API_KEY;
-  if (!apiUrl || !apiKey) {
-    return { status: "failed", error: "NM Groupe non configuré (clés API manquantes)" };
-  }
-
-  try {
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        ...(process.env.NMGROUPE_ACCOUNT_ID ? { "X-Account-Id": process.env.NMGROUPE_ACCOUNT_ID } : {}),
-      },
-      body: JSON.stringify({
-        to: params.to,
-        from: params.from,
-        message: params.message,
-      }),
-    });
-    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-    if (!res.ok) {
-      return { status: "failed", error: String(body?.message ?? `HTTP ${res.status}`) };
-    }
-    return {
-      status: "queued",
-      provider_message_id: String(body?.id ?? body?.message_id ?? ""),
-    };
-  } catch (err) {
-    return { status: "failed", error: err instanceof Error ? err.message : String(err) };
-  }
-}
+import { sendSms } from "./sms-providers.server";
 
 export async function sendCampaignViaNMGroupe(campaignId: string, userId: string) {
   const { data: camp, error } = await supabaseAdmin
@@ -77,7 +34,7 @@ export async function sendCampaignViaNMGroupe(campaignId: string, userId: string
 
   // Send one by one (real prod would batch/parallelize with rate limits)
   for (const phone of recipients) {
-    const res = await sendSingleSms({ to: phone, from: camp.sender_id, message: camp.message });
+    const res = await sendSms({ to: phone, from: camp.sender_id, message: camp.message });
     if (res.status === "failed") {
       failed++;
       await supabaseAdmin.from("sms_messages")

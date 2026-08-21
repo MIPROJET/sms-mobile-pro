@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 const NAV = [
   { to: "/solutions", label: "Solutions" },
   { to: "/tarifs", label: "Tarifs" },
+  { to: "/developpeurs", label: "Développeurs" },
+  { to: "/documentation", label: "Documentation" },
   { to: "/a-propos", label: "À propos" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -105,7 +107,7 @@ export function SiteHeader() {
   );
 }
 
-import ikoffiAsset from "@/assets/ikoffi.jpg.asset.json";
+import ikoffiAsset from "@/assets/ikoffi-profile.png.asset.json";
 
 export function SiteFooter() {
   return (
@@ -129,6 +131,8 @@ export function SiteFooter() {
             <li><Link to="/tarifs" className="hover:text-primary">Tarifs</Link></li>
             <li><Link to="/a-propos" className="hover:text-primary">À propos</Link></li>
             <li><Link to="/actualites" className="hover:text-primary">Actualités</Link></li>
+            <li><Link to="/developpeurs" className="hover:text-primary">Développeurs</Link></li>
+            <li><Link to="/documentation" className="hover:text-primary">Documentation</Link></li>
           </ul>
           <ul className="space-y-2 text-sm font-semibold">
             <li className="text-[10px] font-mono uppercase tracking-widest text-foreground/40">

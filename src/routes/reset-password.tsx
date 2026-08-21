@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { validatePasswordPolicy } from "@/lib/password-policy";
 import { checkPasswordCompromised } from "@/lib/password.functions";
+import { PasswordField } from "@/components/password-field";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
@@ -79,8 +80,8 @@ function ResetPasswordPage() {
               Ouvrez le lien reçu par email depuis cet appareil pour continuer. Si vous êtes déjà
               connecté, vous pouvez changer votre mot de passe ci-dessous.
               <form onSubmit={handleSubmit} className="space-y-3 mt-4">
-                <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Nouveau mot de passe" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
-                <input required type="password" minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirmer" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+                <PasswordField required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Nouveau mot de passe" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+                <PasswordField required minLength={10} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirmer" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
                 <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground rounded-sm font-semibold text-sm hover:bg-primary-dark transition-colors disabled:opacity-50">
                   {loading ? "…" : "Mettre à jour"}
                 </button>
@@ -88,8 +89,8 @@ function ResetPasswordPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3">
-              <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Nouveau mot de passe" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
-              <input required type="password" minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirmer" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+              <PasswordField required minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Nouveau mot de passe" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
+              <PasswordField required minLength={10} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirmer" className="w-full px-4 py-3 border border-border rounded-sm text-sm bg-background" />
               <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground rounded-sm font-semibold text-sm hover:bg-primary-dark transition-colors disabled:opacity-50">
                 {loading ? "…" : "Mettre à jour le mot de passe"}
               </button>
