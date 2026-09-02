@@ -8,6 +8,8 @@ import { submitSignupApplication } from "@/lib/signup.functions";
 import { listPackages } from "@/lib/packages.functions";
 import { validatePasswordPolicy } from "@/lib/password-policy";
 import { checkPasswordCompromised } from "@/lib/password.functions";
+import { createSignupAccount } from "@/lib/signup-account.functions";
+import { PasswordField } from "@/components/password-field";
 import {
   CLIENT_TYPES, COUNTRIES, ID_TYPES, PRICING_TIERS, representativeDocs, structureDocs,
   type DocSpec,
@@ -120,21 +122,32 @@ function SignupPage() {
       if (leak.compromised) {
         throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
       }
-      const { data: signed, error: signErr } = await supabase.auth.signUp({
-        email: f.email.trim().toLowerCase(),
-        password: f.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: { full_name: `${f.first_name} ${f.last_name}`.trim(), phone: f.mobile },
+      const email = f.email.trim().toLowerCase();
+      // Compte créé côté serveur avec email déjà confirmé : la session est garantie
+      // immédiatement, ce qui débloque l'upload KYC et la soumission du dossier.
+      const account = await createSignupAccount({
+        data: {
+          email,
+          password: f.password,
+          full_name: `${f.first_name} ${f.last_name}`.trim(),
+          phone: f.mobile,
         },
       });
-      if (signErr) throw signErr;
-      const uid = signed.user?.id;
-      if (!uid || !signed.session) {
-        toast.success("Compte créé. Confirmez votre email puis connectez-vous pour finaliser votre dossier.");
-        navigate({ to: "/auth" });
-        return;
+      if (!account.ok) throw new Error(account.error);
+
+      const { data: session, error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password: f.password,
+      });
+      if (signInErr || !session.session?.user) {
+        throw new Error(
+          account.exists
+            ? "Un compte existe déjà avec cet email. Connectez-vous pour finaliser votre dossier."
+            : "Impossible d'ouvrir la session. Réessayez ou connectez-vous.",
+        );
       }
+      const uid = session.session.user.id;
+
 
       const allDocs = [...docsStructure, ...docsId];
        const uploaded: { key: string; label: string; path: string; name: string; size: number; mime_type: "application/pdf" | "image/jpeg" | "image/png" }[] = [];
@@ -341,8 +354,8 @@ function SignupPage() {
 
             {step === 5 && (
               <div className="space-y-4">
-                <Field label="Mot de passe * (8 caractères minimum)" full>
-                  <input type="password" className={inp} value={f.password} onChange={(e) => set("password", e.target.value)} />
+                <Field label="Mot de passe * (10 caractères minimum)" full>
+                  <PasswordField className={inp} value={f.password} onChange={(e) => set("password", e.target.value)} autoComplete="new-password" />
                 </Field>
                 <p className="text-xs text-foreground/50">
                   En créant votre compte, vous acceptez nos{" "}

@@ -40,15 +40,20 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
     await validateKycDocuments(context.supabase, context.userId, data.documents);
     const { certified, gdpr_consent, ...application } = data;
     const now = new Date().toISOString();
-    const { error } = await context.supabase.from("signup_applications").insert({
-      ...application,
-      user_id: context.userId,
-      status: "pending",
-      gdpr_consent_at: now,
-      certified_at: now,
-      documents_validation_status: "pending",
-    } as never);
+    const { data: inserted, error } = await context.supabase
+      .from("signup_applications")
+      .insert({
+        ...application,
+        user_id: context.userId,
+        status: "pending",
+        gdpr_consent_at: now,
+        certified_at: now,
+        documents_validation_status: "pending",
+      } as never)
+      .select("id")
+      .single();
     if (error) throw new Error(error.message);
+    const applicationId = (inserted as { id: string } | null)?.id ?? null;
 
     await context.supabase
       .from("profiles")
@@ -80,6 +85,20 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
         `Documents (${application.documents.length}) : ${application.documents.map((d) => `${d.label} → ${d.name}`).join(" | ")}`,
       ].join("\n");
 
+      let emailStatus = "skipped";
+      let emailError: string | null = null;
+      let emailSentAt: string | null = null;
+      try {
+        const { sendAdminSignupEmail } = await import("./notifications.server");
+        const result = await sendAdminSignupEmail(body, application.email);
+        emailStatus = result.sent ? "sent" : "skipped";
+        emailSentAt = result.sent ? new Date().toISOString() : null;
+        if (!result.sent) emailError = result.reason ?? null;
+      } catch (e) {
+        emailStatus = "failed";
+        emailError = e instanceof Error ? e.message : "Erreur d'envoi inconnue";
+      }
+
       await supabaseAdmin.from("notifications").insert({
         audience: "admin",
         kind: "signup",
@@ -87,16 +106,18 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
         body,
         link: "/admin/signups",
         payload: application as never,
+        signup_application_id: applicationId,
+        email_status: emailStatus,
+        email_error: emailError,
+        email_sent_at: emailSentAt,
       } as never);
-
-      const { sendAdminSignupEmail } = await import("./notifications.server");
-      await sendAdminSignupEmail(body, application.email);
     } catch {
       /* la notification ne doit jamais bloquer la soumission du dossier */
     }
 
-    return { ok: true };
+    return { ok: true, application_id: applicationId };
   });
+
 
 export const getMySignupApplication = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -150,7 +171,65 @@ export const reviewSignupApplication = createServerFn({ method: "POST" })
       })
       .eq("id", data.id);
     if (error) throw new Error(error.message);
-    return { ok: true };
+
+    // Validation → crédit automatique du pack (crédits SMS + commande + notification client)
+    let credited = 0;
+    if (data.status === "approved") {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: app } = await supabaseAdmin
+        .from("signup_applications")
+        .select("id, user_id, package_slug, credited_at, email")
+        .eq("id", data.id)
+        .maybeSingle();
+
+      if (app?.user_id && !app.credited_at && app.package_slug) {
+        const { data: pack } = await supabaseAdmin
+          .from("packages")
+          .select("id, name, sms_volume, price_fcfa")
+          .eq("slug", app.package_slug)
+          .maybeSingle();
+
+        if (pack) {
+          const { data: profile } = await supabaseAdmin
+            .from("profiles")
+            .select("sms_credits")
+            .eq("id", app.user_id)
+            .maybeSingle();
+
+          credited = pack.sms_volume;
+          await supabaseAdmin
+            .from("profiles")
+            .update({ sms_credits: (profile?.sms_credits ?? 0) + credited })
+            .eq("id", app.user_id);
+
+          await supabaseAdmin.from("orders").insert({
+            user_id: app.user_id,
+            package_id: pack.id,
+            amount_fcfa: pack.price_fcfa,
+            sms_volume: pack.sms_volume,
+            status: "paid",
+            provider: "admin_validation",
+          } as never);
+
+          await supabaseAdmin
+            .from("signup_applications")
+            .update({ credited_at: now, credited_sms: credited })
+            .eq("id", data.id);
+
+          await supabaseAdmin.from("notifications").insert({
+            audience: "user",
+            user_id: app.user_id,
+            kind: "account_approved",
+            title: "Votre compte est validé",
+            body: `Votre dossier est approuvé. Le pack ${pack.name} a été crédité : ${credited.toLocaleString("fr-FR")} SMS disponibles. Vous pouvez lancer vos campagnes dès maintenant.`,
+            link: "/dashboard/campaigns",
+            payload: { package: pack.name, sms: credited } as never,
+          } as never);
+        }
+      }
+    }
+
+    return { ok: true, credited };
   });
 
 export const deleteSignupApplication = createServerFn({ method: "POST" })

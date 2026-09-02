@@ -1,12 +1,14 @@
 const ADMIN_EMAIL = "admin@smsmobilepro.com";
 
+export type EmailResult = { sent: boolean; reason?: string };
+
 /**
  * Envoie l'email de notification admin pour un nouveau dossier d'inscription.
- * Tant qu'aucune clé API email n'est configurée, l'envoi est ignoré silencieusement.
+ * Tant qu'aucune clé API email n'est configurée, l'envoi est ignoré (statut `skipped`).
  */
-export async function sendAdminSignupEmail(body: string, clientEmail: string): Promise<void> {
+export async function sendAdminSignupEmail(body: string, clientEmail: string): Promise<EmailResult> {
   const apiKey = process.env["RESEND_API_KEY"];
-  if (!apiKey) return;
+  if (!apiKey) return { sent: false, reason: "RESEND_API_KEY non configurée" };
 
   const from = process.env["EMAIL_FROM"] ?? "SMS Mobile Pro <noreply@smsmobilepro.com>";
 
@@ -28,4 +30,5 @@ export async function sendAdminSignupEmail(body: string, clientEmail: string): P
   if (!response.ok) {
     throw new Error(`Email admin non envoyé (${response.status})`);
   }
+  return { sent: true };
 }

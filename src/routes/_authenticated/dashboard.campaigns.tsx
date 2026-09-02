@@ -6,6 +6,7 @@ import {
   listCampaigns, listExecutions, listCampaignMessages, upsertCampaign, sendCampaign,
   deleteCampaign, duplicateCampaign,
 } from "@/lib/campaigns.functions";
+import { listTemplates, upsertTemplate } from "@/lib/templates.functions";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -289,6 +290,15 @@ function CampaignForm({ initial, onDone, onCancel }: { initial: any | null; onDo
     onError: (e: any) => toast.error(e.message),
   });
 
+  const { data: templates = [], refetch: refetchTemplates } = useQuery({
+    queryKey: ["sms-templates"], queryFn: () => listTemplates(),
+  });
+  const saveTemplate = useMutation({
+    mutationFn: () => upsertTemplate({ data: { name: name || "Modèle sans titre", category: "général", content: message } }),
+    onSuccess: () => { toast.success("Modèle enregistré"); void refetchTemplates(); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   const charCount = message.length;
   const smsCount = Math.max(1, Math.ceil(charCount / 160));
 
@@ -301,6 +311,25 @@ function CampaignForm({ initial, onDone, onCancel }: { initial: any | null; onDo
         <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom de la campagne" className="px-3 py-2 border border-border rounded-sm text-sm sm:col-span-2" />
         <input required value={sender} onChange={(e) => setSender(e.target.value)} maxLength={11} placeholder="Expéditeur (max 11 car.)" className="px-3 py-2 border border-border rounded-sm text-sm font-mono" />
         <div className="text-xs text-foreground/50 self-center">Fuseau: Africa/Abidjan · {smsCount} SMS × destinataires</div>
+        <div className="sm:col-span-2 flex flex-wrap items-center gap-2">
+          <select
+            value=""
+            onChange={(e) => {
+              const t = (templates as any[]).find((x) => x.id === e.target.value);
+              if (t) setMessage(t.content);
+            }}
+            className="px-3 py-2 border border-border rounded-sm text-sm bg-background"
+          >
+            <option value="">Utiliser un modèle…</option>
+            {(templates as any[]).map((t) => (
+              <option key={t.id} value={t.id}>{t.name} · {t.category}</option>
+            ))}
+          </select>
+          <button type="button" disabled={!message || saveTemplate.isPending} onClick={() => saveTemplate.mutate()}
+            className="px-3 py-2 text-xs border border-border rounded-sm hover:border-primary disabled:opacity-40">
+            Enregistrer ce message comme modèle
+          </button>
+        </div>
         <textarea required value={message} onChange={(e) => setMessage(e.target.value)} maxLength={1000} rows={3} placeholder="Message SMS" className="px-3 py-2 border border-border rounded-sm text-sm sm:col-span-2" />
         <div className="text-xs text-foreground/50 sm:col-span-2 text-right font-mono">{charCount}/1000 caractères</div>
         <textarea required value={recipients} onChange={(e) => setRecipients(e.target.value)} rows={4} placeholder="Numéros (un par ligne, ou séparés par virgule)" className="px-3 py-2 border border-border rounded-sm text-sm font-mono sm:col-span-2" />
