@@ -40,15 +40,20 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
     await validateKycDocuments(context.supabase, context.userId, data.documents);
     const { certified, gdpr_consent, ...application } = data;
     const now = new Date().toISOString();
-    const { error } = await context.supabase.from("signup_applications").insert({
-      ...application,
-      user_id: context.userId,
-      status: "pending",
-      gdpr_consent_at: now,
-      certified_at: now,
-      documents_validation_status: "pending",
-    } as never);
+    const { data: inserted, error } = await context.supabase
+      .from("signup_applications")
+      .insert({
+        ...application,
+        user_id: context.userId,
+        status: "pending",
+        gdpr_consent_at: now,
+        certified_at: now,
+        documents_validation_status: "pending",
+      } as never)
+      .select("id")
+      .single();
     if (error) throw new Error(error.message);
+    const applicationId = (inserted as { id: string } | null)?.id ?? null;
 
     await context.supabase
       .from("profiles")
@@ -80,6 +85,20 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
         `Documents (${application.documents.length}) : ${application.documents.map((d) => `${d.label} → ${d.name}`).join(" | ")}`,
       ].join("\n");
 
+      let emailStatus = "skipped";
+      let emailError: string | null = null;
+      let emailSentAt: string | null = null;
+      try {
+        const { sendAdminSignupEmail } = await import("./notifications.server");
+        const result = await sendAdminSignupEmail(body, application.email);
+        emailStatus = result.sent ? "sent" : "skipped";
+        emailSentAt = result.sent ? new Date().toISOString() : null;
+        if (!result.sent) emailError = result.reason ?? null;
+      } catch (e) {
+        emailStatus = "failed";
+        emailError = e instanceof Error ? e.message : "Erreur d'envoi inconnue";
+      }
+
       await supabaseAdmin.from("notifications").insert({
         audience: "admin",
         kind: "signup",
@@ -87,16 +106,18 @@ export const submitSignupApplication = createServerFn({ method: "POST" })
         body,
         link: "/admin/signups",
         payload: application as never,
+        signup_application_id: applicationId,
+        email_status: emailStatus,
+        email_error: emailError,
+        email_sent_at: emailSentAt,
       } as never);
-
-      const { sendAdminSignupEmail } = await import("./notifications.server");
-      await sendAdminSignupEmail(body, application.email);
     } catch {
       /* la notification ne doit jamais bloquer la soumission du dossier */
     }
 
-    return { ok: true };
+    return { ok: true, application_id: applicationId };
   });
+
 
 export const getMySignupApplication = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
