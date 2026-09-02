@@ -355,7 +355,7 @@ function SignupPage() {
             {step === 5 && (
               <div className="space-y-4">
                 <Field label="Mot de passe * (10 caractères minimum)" full>
-                  <PasswordField value={f.password} onChange={(v) => set("password", v)} autoComplete="new-password" />
+                  <PasswordField className={inp} value={f.password} onChange={(e) => set("password", e.target.value)} autoComplete="new-password" />
                 </Field>
                 <p className="text-xs text-foreground/50">
                   En créant votre compte, vous acceptez nos{" "}
