@@ -171,7 +171,65 @@ export const reviewSignupApplication = createServerFn({ method: "POST" })
       })
       .eq("id", data.id);
     if (error) throw new Error(error.message);
-    return { ok: true };
+
+    // Validation → crédit automatique du pack (crédits SMS + commande + notification client)
+    let credited = 0;
+    if (data.status === "approved") {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: app } = await supabaseAdmin
+        .from("signup_applications")
+        .select("id, user_id, package_slug, credited_at, email")
+        .eq("id", data.id)
+        .maybeSingle();
+
+      if (app?.user_id && !app.credited_at && app.package_slug) {
+        const { data: pack } = await supabaseAdmin
+          .from("packages")
+          .select("id, name, sms_volume, price_fcfa")
+          .eq("slug", app.package_slug)
+          .maybeSingle();
+
+        if (pack) {
+          const { data: profile } = await supabaseAdmin
+            .from("profiles")
+            .select("sms_credits")
+            .eq("id", app.user_id)
+            .maybeSingle();
+
+          credited = pack.sms_volume;
+          await supabaseAdmin
+            .from("profiles")
+            .update({ sms_credits: (profile?.sms_credits ?? 0) + credited })
+            .eq("id", app.user_id);
+
+          await supabaseAdmin.from("orders").insert({
+            user_id: app.user_id,
+            package_id: pack.id,
+            amount_fcfa: pack.price_fcfa,
+            sms_volume: pack.sms_volume,
+            status: "paid",
+            provider: "admin_validation",
+          } as never);
+
+          await supabaseAdmin
+            .from("signup_applications")
+            .update({ credited_at: now, credited_sms: credited })
+            .eq("id", data.id);
+
+          await supabaseAdmin.from("notifications").insert({
+            audience: "user",
+            user_id: app.user_id,
+            kind: "account_approved",
+            title: "Votre compte est validé",
+            body: `Votre dossier est approuvé. Le pack ${pack.name} a été crédité : ${credited.toLocaleString("fr-FR")} SMS disponibles. Vous pouvez lancer vos campagnes dès maintenant.`,
+            link: "/dashboard/campaigns",
+            payload: { package: pack.name, sms: credited } as never,
+          } as never);
+        }
+      }
+    }
+
+    return { ok: true, credited };
   });
 
 export const deleteSignupApplication = createServerFn({ method: "POST" })
