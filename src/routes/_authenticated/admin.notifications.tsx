@@ -83,3 +83,13 @@ function NotificationsAdmin() {
     </DashboardLayout>
   );
 }
+
+function emailLabel(status?: string) {
+  return ({ sent: "envoyé", failed: "échec", skipped: "non configuré", pending: "en attente" } as Record<string, string>)[status ?? "pending"] ?? (status ?? "—");
+}
+
+function emailChip(status?: string) {
+  if (status === "sent") return "border-primary text-primary";
+  if (status === "failed") return "border-destructive text-destructive";
+  return "border-border text-foreground/50";
+}
