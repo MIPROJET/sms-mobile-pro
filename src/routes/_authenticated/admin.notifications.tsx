@@ -50,6 +50,16 @@ function NotificationsAdmin() {
               <div className="text-xs text-foreground/60 whitespace-pre-wrap mt-1">{n.body}</div>
               <div className="text-[10px] font-mono text-foreground/40 mt-1">
                 {new Date(n.created_at).toLocaleString("fr-FR")} · {n.kind}
+                {n.signup_application_id ? ` · dossier ${String(n.signup_application_id).slice(0, 8)}` : ""}
+              </div>
+              <div className="flex flex-wrap items-center gap-2 mt-2 text-[10px] font-mono uppercase">
+                <span className={`px-2 py-1 rounded-sm border ${emailChip(n.email_status)}`}>
+                  email : {emailLabel(n.email_status)}
+                </span>
+                {n.email_sent_at && (
+                  <span className="text-foreground/40">envoyé le {new Date(n.email_sent_at).toLocaleString("fr-FR")}</span>
+                )}
+                {n.email_error && <span className="text-destructive normal-case">{n.email_error}</span>}
               </div>
             </div>
             <div className="flex items-center gap-2">
