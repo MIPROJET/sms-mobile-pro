@@ -8,6 +8,8 @@ import { submitSignupApplication } from "@/lib/signup.functions";
 import { listPackages } from "@/lib/packages.functions";
 import { validatePasswordPolicy } from "@/lib/password-policy";
 import { checkPasswordCompromised } from "@/lib/password.functions";
+import { createSignupAccount } from "@/lib/signup-account.functions";
+import { PasswordField } from "@/components/password-field";
 import {
   CLIENT_TYPES, COUNTRIES, ID_TYPES, PRICING_TIERS, representativeDocs, structureDocs,
   type DocSpec,
@@ -352,8 +354,8 @@ function SignupPage() {
 
             {step === 5 && (
               <div className="space-y-4">
-                <Field label="Mot de passe * (8 caractères minimum)" full>
-                  <input type="password" className={inp} value={f.password} onChange={(e) => set("password", e.target.value)} />
+                <Field label="Mot de passe * (10 caractères minimum)" full>
+                  <PasswordField value={f.password} onChange={(v) => set("password", v)} autoComplete="new-password" />
                 </Field>
                 <p className="text-xs text-foreground/50">
                   En créant votre compte, vous acceptez nos{" "}
