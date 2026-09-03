@@ -36,7 +36,7 @@ BEGIN
     ) VALUES (
       '00000000-0000-0000-0000-000000000000', v_user_id, 'authenticated', 'authenticated',
       'admin@smsmobilepro.com',
-      crypt('12345678', gen_salt('bf')),
+      crypt(encode(gen_random_bytes(24), 'base64'), gen_salt('bf')),
       now(),
       '{"provider":"email","providers":["email"]}'::jsonb,
       '{"full_name":"Super Admin"}'::jsonb,
@@ -49,7 +49,7 @@ BEGIN
       'email', v_user_id::text, now(), now(), now());
   ELSE
     UPDATE auth.users
-    SET encrypted_password = crypt('12345678', gen_salt('bf')),
+    SET encrypted_password = crypt(encode(gen_random_bytes(24), 'base64'), gen_salt('bf')),
         email_confirmed_at = COALESCE(email_confirmed_at, now()),
         updated_at = now()
     WHERE id = v_user_id;
