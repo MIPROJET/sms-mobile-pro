@@ -67,6 +67,41 @@ export const loginWithIdentifier = createServerFn({ method: "POST" })
     };
   });
 
+const RESET_PATH = "/reset-password";
+
+/** Hôtes de première partie autorisés comme destination d'un email de récupération. */
+function isFirstPartyHost(hostname: string) {
+  const allowedSuffixes = [".lovable.app", ".lovable.dev", ".vercel.app"];
+  const extra = (process.env.APP_PUBLIC_URL ?? "").trim();
+  if (extra) {
+    try {
+      if (new URL(extra).hostname.toLowerCase() === hostname) return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+  if (hostname === "smsmobilepro.com" || hostname.endsWith(".smsmobilepro.com")) return true;
+  return allowedSuffixes.some((suffix) => hostname.endsWith(suffix));
+}
+
+/**
+ * Normalise la destination du lien de récupération : seuls les domaines de
+ * première partie sont acceptés et le chemin est forcé sur /reset-password.
+ * Toute autre valeur est remplacée par la destination sûre par défaut.
+ */
+function safeResetRedirect(value: string): string | null {
+  try {
+    const url = new URL(value);
+    const isSecure = url.protocol === "https:" || url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    if (!isSecure) return null;
+    if (!isFirstPartyHost(url.hostname.toLowerCase())) return null;
+    return `${url.origin}${RESET_PATH}`;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Sends a password-recovery email for an email or username. Always returns the
  * same response so callers cannot learn whether an account exists.
@@ -82,10 +117,12 @@ export const requestPasswordReset = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     try {
+      const redirectTo = safeResetRedirect(data.redirectTo);
+      if (!redirectTo) return { ok: true };
       const email = await resolveEmail(data.identifier);
       if (email) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        await supabaseAdmin.auth.resetPasswordForEmail(email, { redirectTo: data.redirectTo });
+        await supabaseAdmin.auth.resetPasswordForEmail(email, { redirectTo });
       }
     } catch (err) {
       console.error("[auth] password reset failed", err);
