@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { validatePasswordPolicy } from "./password-policy";
+import { assertPasswordAllowed } from "./password.server";
 
 /**
  * Crée le compte client côté serveur avec l'email déjà confirmé, afin que le
