@@ -92,6 +92,9 @@ export const createUser = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await assertAdminRole(context);
+    const { assertPasswordAllowed } = await import("./password.server");
+    const policyError = await assertPasswordAllowed(data.password);
+    if (policyError) throw new Error(policyError);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
