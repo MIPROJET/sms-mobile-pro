@@ -20,7 +20,7 @@ export const createSignupAccount = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data }) => {
-    const policyError = validatePasswordPolicy(data.password);
+    const policyError = await assertPasswordAllowed(data.password);
     if (policyError) return { ok: false as const, error: policyError };
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
