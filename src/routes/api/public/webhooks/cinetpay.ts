@@ -1,9 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { timingSafeEqual } from "crypto";
+
+function secretMatches(provided: string, expected: string) {
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 export const Route = createFileRoute("/api/public/webhooks/cinetpay")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // Authentification de l'appelant : secret partagé transmis dans la notify_url
+        // (query string) ou dans un en-tête. Sans lui, n'importe qui pourrait rejouer
+        // la notification d'une commande connue.
+        const webhookSecret = process.env.CINETPAY_WEBHOOK_SECRET;
+        if (!webhookSecret) return new Response("Webhook secret not configured", { status: 503 });
+        const url = new URL(request.url);
+        const provided = url.searchParams.get("secret") ?? request.headers.get("x-webhook-secret") ?? "";
+        if (!provided || !secretMatches(provided, webhookSecret)) {
+          return new Response("Unauthorized", { status: 401 });
+        }
+
         const contentType = request.headers.get("content-type") ?? "";
         let payload: Record<string, any> = {};
         if (contentType.includes("application/json")) {
@@ -32,30 +50,30 @@ export const Route = createFileRoute("/api/public/webhooks/cinetpay")({
         const status = verify?.data?.status;
 
         const { data: order } = await supabaseAdmin
-          .from("orders").select("*").eq("id", transactionId).maybeSingle();
+          .from("orders").select("id, status").eq("id", transactionId).maybeSingle();
         if (!order) return new Response("Order not found", { status: 404 });
 
         if (status === "ACCEPTED") {
-          await supabaseAdmin.from("orders").update({
-            status: "paid",
-            provider_transaction_id: transactionId,
-            provider_payload: verify,
-          }).eq("id", order.id);
+          // Idempotent : la fonction ne crédite que si la commande n'était pas déjà payée.
+          const { data: credited, error } = await supabaseAdmin.rpc("settle_paid_order", {
+            _order_id: order.id,
+            _provider_transaction_id: String(transactionId),
+            _provider_payload: verify,
+          });
+          if (error) return new Response("Settlement failed", { status: 500 });
+          return Response.json({ ok: true, credited: credited ?? 0 });
+        }
 
-          // Credit user
-          const { data: prof } = await supabaseAdmin.from("profiles").select("sms_credits").eq("id", order.user_id).single();
-          await supabaseAdmin.from("profiles")
-            .update({ sms_credits: (prof?.sms_credits ?? 0) + order.sms_volume })
-            .eq("id", order.user_id);
-        } else if (status && status !== "PENDING") {
+        if (status && status !== "PENDING" && order.status !== "paid") {
           await supabaseAdmin.from("orders").update({
             status: "failed",
             provider_payload: verify,
-          }).eq("id", order.id);
+          }).eq("id", order.id).neq("status", "paid");
         }
 
-        return Response.json({ ok: true });
+        return Response.json({ ok: true, credited: 0 });
       },
     },
   },
 });
+

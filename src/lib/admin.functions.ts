@@ -169,14 +169,20 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdminRole(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order, error } = await supabaseAdmin.from("orders").update({ status: data.status }).eq("id", data.id).select("user_id, sms_volume, status").maybeSingle();
-    if (error) throw new Error(error.message);
-    if (order && data.status === "paid" && order.sms_volume > 0) {
-      const { data: prof } = await supabaseAdmin.from("profiles").select("sms_credits").eq("id", order.user_id).maybeSingle();
-      await supabaseAdmin.from("profiles").update({ sms_credits: (prof?.sms_credits ?? 0) + order.sms_volume }).eq("id", order.user_id);
+    if (data.status === "paid") {
+      // Idempotent : marque payé et crédite une seule fois.
+      const { data: credited, error } = await supabaseAdmin.rpc("settle_paid_order", {
+        _order_id: data.id,
+      });
+
+      if (error) throw new Error(error.message);
+      return { ok: true, credited: credited ?? 0 };
     }
-    return { ok: true };
+    const { error } = await supabaseAdmin.from("orders").update({ status: data.status }).eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true, credited: 0 };
   });
+
 
 // ============ CAMPAIGNS ============
 export const listCampaignsAdmin = createServerFn({ method: "GET" })

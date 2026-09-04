@@ -26,25 +26,27 @@ export const Route = createFileRoute("/api/public/webhooks/fedapay")({
         if (!orderId) return new Response("Missing metadata.order_id", { status: 400 });
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: order } = await supabaseAdmin.from("orders").select("*").eq("id", orderId).maybeSingle();
+        const { data: order } = await supabaseAdmin.from("orders").select("id, status").eq("id", orderId).maybeSingle();
         if (!order) return new Response("Order not found", { status: 404 });
 
         if (status === "approved" || status === "transferred") {
-          await supabaseAdmin.from("orders").update({
-            status: "paid",
-            provider_transaction_id: String(entity.id ?? ""),
-            provider_payload: payload,
-          }).eq("id", order.id);
-          const { data: prof } = await supabaseAdmin.from("profiles").select("sms_credits").eq("id", order.user_id).single();
-          await supabaseAdmin.from("profiles")
-            .update({ sms_credits: (prof?.sms_credits ?? 0) + order.sms_volume })
-            .eq("id", order.user_id);
-        } else if (status === "declined" || status === "canceled" || status === "failed") {
+          // Idempotent : crédite une seule fois, même si le webhook est rejoué.
+          const { data: credited, error } = await supabaseAdmin.rpc("settle_paid_order", {
+            _order_id: order.id,
+            _provider_transaction_id: String(entity.id ?? ""),
+            _provider_payload: payload,
+          });
+          if (error) return new Response("Settlement failed", { status: 500 });
+          return Response.json({ ok: true, credited: credited ?? 0 });
+        }
+
+        if ((status === "declined" || status === "canceled" || status === "failed") && order.status !== "paid") {
           await supabaseAdmin.from("orders").update({
             status: "failed",
             provider_payload: payload,
-          }).eq("id", order.id);
+          }).eq("id", order.id).neq("status", "paid");
         }
+
 
         return Response.json({ ok: true });
       },

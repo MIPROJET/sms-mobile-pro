@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { validatePasswordPolicy } from "@/lib/password-policy";
-import { checkPasswordCompromised } from "@/lib/password.functions";
+import { updateMyPassword } from "@/lib/password.functions";
 import { PasswordField } from "@/components/password-field";
 
 export const Route = createFileRoute("/reset-password")({
@@ -42,12 +42,11 @@ function ResetPasswordPage() {
     if (password !== confirm) return toast.error("Les mots de passe ne correspondent pas.");
     setLoading(true);
     try {
-      const leak = await checkPasswordCompromised({ data: { password } });
-      if (leak.compromised) {
-        throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
-      }
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
+      // Contrôle et écriture côté serveur (politique + fuites connues).
+      const result = await updateMyPassword({ data: { password } });
+      if (!result.ok) throw new Error(result.error);
+      await supabase.auth.refreshSession();
+
       toast.success("Mot de passe mis à jour. Vous êtes connecté.");
       navigate({ to: "/dashboard", replace: true });
     } catch (err: any) {
