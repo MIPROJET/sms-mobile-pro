@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/dashboard-chrome";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchRoles } from "@/lib/auth";
-import { listAdminNotifications, markNotificationRead, deleteNotification } from "@/lib/notifications.functions";
+import { listAdminNotifications, markNotificationRead, deleteNotification, retryNotificationEmail } from "@/lib/notifications.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/notifications")({
@@ -29,6 +29,16 @@ function NotificationsAdmin() {
   const read = useMutation({
     mutationFn: (v: { id: string; read: boolean }) => markNotificationRead({ data: v }),
     onSuccess: invalidate,
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const retry = useMutation({
+    mutationFn: (id: string) => retryNotificationEmail({ data: { id } }),
+    onSuccess: (r: any) => {
+      invalidate();
+      if (r?.status === "sent") toast.success("Email renvoyé avec succès");
+      else if (r?.status === "skipped") toast.warning(r?.error ?? "Envoi ignoré : email non configuré");
+      else toast.error(r?.error ?? "Nouvel échec d'envoi");
+    },
     onError: (e: Error) => toast.error(e.message),
   });
   const del = useMutation({
@@ -59,6 +69,12 @@ function NotificationsAdmin() {
                 {n.email_sent_at && (
                   <span className="text-foreground/40">envoyé le {new Date(n.email_sent_at).toLocaleString("fr-FR")}</span>
                 )}
+                {typeof n.email_attempts === "number" && n.email_attempts > 0 && (
+                  <span className="text-foreground/40">{n.email_attempts} tentative(s)</span>
+                )}
+                {n.email_last_attempt_at && (
+                  <span className="text-foreground/40">dernier essai {new Date(n.email_last_attempt_at).toLocaleString("fr-FR")}</span>
+                )}
                 {n.email_error && <span className="text-destructive normal-case">{n.email_error}</span>}
               </div>
             </div>
@@ -67,6 +83,15 @@ function NotificationsAdmin() {
                 <Link to={n.link} className="text-xs px-3 py-1.5 bg-primary text-primary-foreground rounded-sm">
                   Traiter
                 </Link>
+              )}
+              {n.email_status !== "sent" && (
+                <button
+                  onClick={() => retry.mutate(n.id)}
+                  disabled={retry.isPending}
+                  className="text-xs px-3 py-1.5 border border-primary text-primary rounded-sm hover:bg-primary/10 disabled:opacity-50"
+                >
+                  Réessayer l'envoi
+                </button>
               )}
               <button onClick={() => read.mutate({ id: n.id, read: !n.read_at })}
                 className="text-xs px-3 py-1.5 border border-border rounded-sm hover:bg-muted">
