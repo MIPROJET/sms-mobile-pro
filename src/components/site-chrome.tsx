@@ -26,14 +26,14 @@ export function SiteHeader() {
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
         <div className="mx-auto max-w-6xl px-4 sm:px-8 py-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-        <Link to="/" className="flex flex-col leading-none shrink-0" onClick={() => setOpen(false)}>
-          <span className="font-display font-black text-primary tracking-tighter text-lg sm:text-xl">
-            SMS PRO
-          </span>
-          <span className="text-[9px] sm:text-[10px] font-mono tracking-widest text-foreground/50 uppercase">
-            Mobile CI
-          </span>
+        <Link to="/" className="flex items-center shrink-0" onClick={() => setOpen(false)} aria-label="SMS Pro Mobile — accueil">
+          <img
+            src={smsProLogo.url}
+            alt="SMS Pro Mobile"
+            className="h-8 sm:h-10 w-auto object-contain"
+          />
         </Link>
+
 
         <div className="flex items-center gap-2 sm:gap-5 min-w-0">
           <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
