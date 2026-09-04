@@ -410,9 +410,12 @@ export type Database = {
           audience: string
           body: string | null
           created_at: string
+          email_attempts: number
           email_error: string | null
+          email_last_attempt_at: string | null
           email_sent_at: string | null
           email_status: string
+          email_to: string | null
           id: string
           kind: string
           link: string | null
@@ -426,9 +429,12 @@ export type Database = {
           audience?: string
           body?: string | null
           created_at?: string
+          email_attempts?: number
           email_error?: string | null
+          email_last_attempt_at?: string | null
           email_sent_at?: string | null
           email_status?: string
+          email_to?: string | null
           id?: string
           kind?: string
           link?: string | null
@@ -442,9 +448,12 @@ export type Database = {
           audience?: string
           body?: string | null
           created_at?: string
+          email_attempts?: number
           email_error?: string | null
+          email_last_attempt_at?: string | null
           email_sent_at?: string | null
           email_status?: string
+          email_to?: string | null
           id?: string
           kind?: string
           link?: string | null
