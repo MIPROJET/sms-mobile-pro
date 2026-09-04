@@ -71,8 +71,8 @@ export function InstallPrompt() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] grid place-items-center bg-foreground/50 backdrop-blur-sm p-4 animate-fade-in">
-      <div className="relative aspect-square w-[min(88vw,340px)] rounded-full bg-background border-4 border-primary shadow-brand grid place-items-center text-center px-8 animate-scale-in">
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-foreground/50 backdrop-blur-sm p-4 animate-popup-fade">
+      <div className="relative aspect-square w-[min(88vw,340px)] rounded-full bg-background border-4 border-primary shadow-brand grid place-items-center text-center px-8 animate-popup-in">
         <button
           type="button"
           onClick={() => close(true)}
