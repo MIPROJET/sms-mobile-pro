@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, UserRound, X } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { supabase } from "@/integrations/supabase/client";
+import smsProLogo from "@/assets/sms-pro-mobile-logo.png.asset.json";
 
 const NAV = [
   { to: "/solutions", label: "Solutions" },
@@ -107,7 +108,7 @@ export function SiteHeader() {
   );
 }
 
-import ikoffiAsset from "@/assets/ikoffi-profile.png.asset.json";
+import nmLogo from "@/assets/nm-technologie-logo.jpg.asset.json";
 
 export function SiteFooter() {
   return (
@@ -115,9 +116,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl flex flex-col gap-8">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="sm:col-span-2 md:col-span-1">
-            <span className="font-display font-black text-primary tracking-tighter text-xl">
-              SMS PRO
-            </span>
+            <img src={smsProLogo.url} alt="SMS Pro Mobile" className="h-9 w-auto object-contain" />
             <p className="text-xs text-foreground/50 mt-2 max-w-xs">
               Plateforme SMS professionnelle propulsée par NM Technologie. Solutions de
               communication pour l'Afrique de l'Ouest.
@@ -141,7 +140,7 @@ export function SiteFooter() {
             <li><Link to="/contact" className="hover:text-primary">Nous contacter</Link></li>
             <li>
               <a
-                href="https://wa.me/2250700000000"
+                href="https://wa.me/2250707173707"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("cta_whatsapp_click", { location: "footer" })}
@@ -163,29 +162,29 @@ export function SiteFooter() {
         {/* Author credit */}
         <div className="border-t border-border pt-6 flex flex-wrap items-center gap-3 text-xs text-foreground/60">
           <img
-            src={ikoffiAsset.url}
-            alt="Inocent KOFFI"
-            className="h-10 w-10 rounded-full object-cover border border-border shrink-0"
+            src={nmLogo.url}
+            alt="NM Technologie"
+            className="h-10 w-10 rounded-full object-cover border border-border shrink-0 bg-white"
             loading="lazy"
           />
-          <span>Par</span>
+          <span>Un produit</span>
           <a
             href="https://ikoffi.agricapital.ci"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-foreground hover:text-primary"
           >
-            Inocent KOFFI
+            NM Technologie
           </a>
-          <span aria-hidden>·</span>
+          <span aria-hidden>-</span>
           <a
-            href="https://wa.me/2250759566087"
+            href="https://wa.me/2250707173707"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track("cta_whatsapp_click", { location: "footer_author" })}
             className="font-semibold text-foreground hover:text-primary"
           >
-            +225 07 59 56 60 87
+            +2250707173707
           </a>
         </div>
 
