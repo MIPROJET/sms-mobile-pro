@@ -173,9 +173,8 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
       // Idempotent : marque payé et crédite une seule fois.
       const { data: credited, error } = await supabaseAdmin.rpc("settle_paid_order", {
         _order_id: data.id,
-        _provider_transaction_id: null,
-        _provider_payload: null,
       });
+
       if (error) throw new Error(error.message);
       return { ok: true, credited: credited ?? 0 };
     }
