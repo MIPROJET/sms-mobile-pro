@@ -1,5 +1,28 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+
+/**
+ * Changement de mot de passe validé côté serveur : la politique locale et la
+ * vérification des fuites connues (HIBP) sont appliquées avant l'écriture, donc
+ * elles ne peuvent pas être contournées depuis le navigateur.
+ */
+export const updateMyPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ password: z.string().min(1).max(200) }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { assertPasswordAllowed } = await import("./password.server");
+    const policyError = await assertPasswordAllowed(data.password);
+    if (policyError) return { ok: false as const, error: policyError };
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(context.userId, {
+      password: data.password,
+    });
+    if (error) return { ok: false as const, error: "Impossible de mettre à jour le mot de passe." };
+    return { ok: true as const };
+  });
+
 
 /**
  * Server-side leaked-password check (Have I Been Pwned k-anonymity API).
