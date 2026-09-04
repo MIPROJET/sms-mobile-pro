@@ -83,13 +83,24 @@ function PackageForm({ pkg, onDone, onCancel }: { pkg: any; onDone: () => void; 
   });
   return (
     <form onSubmit={(e) => { e.preventDefault(); save.mutate(); }} className="bg-background border border-primary rounded-sm p-5 mb-4 grid gap-3 sm:grid-cols-2">
-      <input required value={s.slug} onChange={(e) => setS({ ...s, slug: e.target.value })} placeholder="slug" className="px-3 py-2 border border-border rounded-sm text-sm font-mono" />
-      <input required value={s.name} onChange={(e) => setS({ ...s, name: e.target.value })} placeholder="Nom" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="number" value={s.price_fcfa} onChange={(e) => setS({ ...s, price_fcfa: e.target.value })} placeholder="Prix FCFA" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="number" value={s.sms_volume} onChange={(e) => setS({ ...s, sms_volume: e.target.value })} placeholder="Volume SMS" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <textarea rows={4} value={s.features} onChange={(e) => setS({ ...s, features: e.target.value })} placeholder="Fonctionnalités (une par ligne)" className="sm:col-span-2 px-3 py-2 border border-border rounded-sm text-sm" />
-      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!s.active} onChange={(e) => setS({ ...s, active: e.target.checked })} />Actif</label>
+      <Field label="Identifiant (slug)" hint="minuscules, sans espace">
+        <input required value={s.slug} onChange={(e) => setS({ ...s, slug: e.target.value })} placeholder="pack-1000" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field label="Nom du package">
+        <input required value={s.name} onChange={(e) => setS({ ...s, name: e.target.value })} placeholder="Pack 1 000 SMS" className="w-full px-3 py-2 border border-border rounded-sm text-sm" />
+      </Field>
+      <Field label="Prix total (FCFA)">
+        <input required type="number" min={0} value={s.price_fcfa} onChange={(e) => setS({ ...s, price_fcfa: e.target.value })} placeholder="20000" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field label="Volume SMS inclus">
+        <input required type="number" min={0} value={s.sms_volume} onChange={(e) => setS({ ...s, sms_volume: e.target.value })} placeholder="1000" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field className="sm:col-span-2" label="Fonctionnalités" hint="une par ligne">
+        <textarea rows={4} value={s.features} onChange={(e) => setS({ ...s, features: e.target.value })} placeholder={"Envoi illimité\nAPI incluse"} className="w-full px-3 py-2 border border-border rounded-sm text-sm" />
+      </Field>
+      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!s.active} onChange={(e) => setS({ ...s, active: e.target.checked })} />Actif (visible sur le site)</label>
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!s.featured} onChange={(e) => setS({ ...s, featured: e.target.checked })} />Mis en avant</label>
+
       <div className="sm:col-span-2 flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-4 py-2 text-sm border border-border rounded-sm">Annuler</button>
         <button type="submit" disabled={save.isPending} className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-sm font-semibold hover:bg-primary-dark disabled:opacity-50">Enregistrer</button>
