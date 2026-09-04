@@ -70,12 +70,11 @@ export async function sendCampaignViaNMGroupe(campaignId: string, userId: string
     }
   }
 
-  // Decrement credits by sent count
-  if (sent > 0) {
-    const { data: prof } = await supabaseAdmin.from("profiles").select("sms_credits").eq("id", userId).single();
-    const newCredits = Math.max(0, (prof?.sms_credits ?? 0) - sent);
-    await supabaseAdmin.from("profiles").update({ sms_credits: newCredits }).eq("id", userId);
+  // Les crédits ont été réservés avant l'envoi : on rembourse uniquement les échecs.
+  if (failed > 0) {
+    await supabaseAdmin.rpc("refund_sms_credits", { _user_id: userId, _amount: failed });
   }
+
 
   await supabaseAdmin.from("campaigns").update({
     status: failed === recipients.length ? "failed" : "sent",
