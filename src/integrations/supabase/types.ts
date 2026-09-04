@@ -965,6 +965,22 @@ export type Database = {
     }
     Functions: {
       autopublish_news: { Args: never; Returns: undefined }
+      refund_sms_credits: {
+        Args: { _amount: number; _user_id: string }
+        Returns: number
+      }
+      reserve_sms_credits: {
+        Args: { _amount: number; _user_id: string }
+        Returns: number
+      }
+      settle_paid_order: {
+        Args: {
+          _order_id: string
+          _provider_payload?: Json
+          _provider_transaction_id?: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       app_role: "admin" | "client"
