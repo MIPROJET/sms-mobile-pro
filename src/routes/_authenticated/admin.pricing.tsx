@@ -164,15 +164,26 @@ function TierForm({ draft, onDone, onCancel }: { draft: Draft; onDone: () => voi
       onSubmit={(e) => { e.preventDefault(); save.mutate(); }}
       className="bg-background border border-primary rounded-sm p-5 mb-4 grid gap-3 sm:grid-cols-2"
     >
-      <input required value={s.label} onChange={(e) => setS({ ...s, label: e.target.value })} placeholder="Libellé (ex : 1 000 à 9 999 SMS)" className="sm:col-span-2 px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="number" value={s.min_sms} onChange={(e) => setS({ ...s, min_sms: e.target.value })} placeholder="SMS min" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input type="number" value={s.max_sms} onChange={(e) => setS({ ...s, max_sms: e.target.value })} placeholder="SMS max (vide = illimité)" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="number" value={s.unit_price_fcfa} onChange={(e) => setS({ ...s, unit_price_fcfa: e.target.value })} placeholder="Prix unitaire FCFA" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <input required type="number" value={s.sort_order} onChange={(e) => setS({ ...s, sort_order: e.target.value })} placeholder="Ordre" className="px-3 py-2 border border-border rounded-sm text-sm" />
-      <label className="flex items-center gap-2 text-sm">
+      <Field className="sm:col-span-2" label="Libellé du palier">
+        <input required value={s.label} onChange={(e) => setS({ ...s, label: e.target.value })} placeholder="ex : 1 000 à 9 999 SMS" className="w-full px-3 py-2 border border-border rounded-sm text-sm" />
+      </Field>
+      <Field label="SMS minimum">
+        <input required type="number" min={1} value={s.min_sms} onChange={(e) => setS({ ...s, min_sms: e.target.value })} placeholder="1000" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field label="SMS maximum" hint="Laisser vide = illimité">
+        <input type="number" value={s.max_sms} onChange={(e) => setS({ ...s, max_sms: e.target.value })} placeholder="9999" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field label="Prix unitaire (FCFA / SMS)">
+        <input required type="number" min={1} value={s.unit_price_fcfa} onChange={(e) => setS({ ...s, unit_price_fcfa: e.target.value })} placeholder="20" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <Field label="Ordre d'affichage">
+        <input required type="number" value={s.sort_order} onChange={(e) => setS({ ...s, sort_order: e.target.value })} placeholder="1" className="w-full px-3 py-2 border border-border rounded-sm text-sm font-mono" />
+      </Field>
+      <label className="flex items-center gap-2 text-sm sm:col-span-2">
         <input type="checkbox" checked={!!s.active} onChange={(e) => setS({ ...s, active: e.target.checked })} />
-        Actif
+        Palier actif (visible sur les pages publiques)
       </label>
+
       <div className="sm:col-span-2 flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-4 py-2 text-sm border border-border rounded-sm">Annuler</button>
         <button type="submit" disabled={save.isPending} className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-sm font-semibold hover:bg-primary-dark disabled:opacity-50">Enregistrer</button>

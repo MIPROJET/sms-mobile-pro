@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CookieConsentBanner } from "../components/cookie-consent";
+import { InstallPrompt } from "@/components/install-prompt";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -92,6 +93,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Plateforme professionnelle d'envoi de SMS marketing, alertes et API Gateway pour entreprises en Côte d'Ivoire et Afrique de l'Ouest.",
       },
+      { name: "theme-color", content: "#c62828" },
+      { name: "apple-mobile-web-app-title", content: "SMS Pro Mobile" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "SMS Pro Mobile — Plateforme SMS Marketing en Côte d'Ivoire" },
@@ -100,6 +104,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/12a067c9-28eb-44c0-8708-20bebcfee801" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -140,6 +147,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <CookieConsentBanner />
+      <InstallPrompt />
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
