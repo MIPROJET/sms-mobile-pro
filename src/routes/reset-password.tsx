@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { validatePasswordPolicy } from "@/lib/password-policy";
-import { checkPasswordCompromised } from "@/lib/password.functions";
+import { updateMyPassword } from "@/lib/password.functions";
 import { PasswordField } from "@/components/password-field";
 
 export const Route = createFileRoute("/reset-password")({
