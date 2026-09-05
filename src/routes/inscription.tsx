@@ -390,7 +390,7 @@ function SignupPage() {
               </div>
             )}
 
-            {step === 5 && (
+            {step === 5 && !awaitingCode && (
               <div className="space-y-4">
                 <Field label="Mot de passe * (10 caractères minimum)" full>
                   <PasswordField className={inp} value={f.password} onChange={(e) => set("password", e.target.value)} autoComplete="new-password" />
@@ -407,8 +407,31 @@ function SignupPage() {
               </div>
             )}
 
+            {step === 5 && awaitingCode && (
+              <div className="space-y-4">
+                <div className="text-sm text-foreground/70">
+                  Nous avons envoyé un code à 6 chiffres à <strong>{f.email.trim().toLowerCase()}</strong>.
+                  Saisissez-le pour confirmer que cette adresse est bien la vôtre et finaliser votre dossier.
+                </div>
+                <Field label="Code de vérification *" full>
+                  <input
+                    className={inp}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={8}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                    placeholder="123456"
+                  />
+                </Field>
+                <button type="button" onClick={resendCode} disabled={busy} className="text-xs underline text-foreground/60">
+                  Renvoyer le code
+                </button>
+              </div>
+            )}
+
             <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
-              <button type="button" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}
+              <button type="button" disabled={step === 0 || awaitingCode} onClick={() => setStep((s) => Math.max(0, s - 1))}
                 className="text-sm px-4 py-2 border border-border rounded-sm disabled:opacity-40">
                 Retour
               </button>
@@ -417,13 +440,19 @@ function SignupPage() {
                   className="text-sm font-semibold px-5 py-2 bg-primary text-primary-foreground rounded-sm">
                   Continuer
                 </button>
+              ) : awaitingCode ? (
+                <button type="button" onClick={confirmCode} disabled={busy}
+                  className="text-sm font-semibold px-5 py-2 bg-primary text-primary-foreground rounded-sm disabled:opacity-50">
+                  {busy ? "Vérification…" : "Confirmer et soumettre"}
+                </button>
               ) : (
                 <button type="button" onClick={submit} disabled={busy}
                   className="text-sm font-semibold px-5 py-2 bg-primary text-primary-foreground rounded-sm disabled:opacity-50">
-                  {busy ? "Envoi…" : "Soumettre mon dossier"}
+                  {busy ? "Envoi…" : "Recevoir mon code de vérification"}
                 </button>
               )}
             </div>
+
           </div>
 
           <p className="text-sm text-foreground/60 mt-6">
