@@ -113,6 +113,7 @@ function SignupPage() {
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   }
 
+  /** Étape 1 : créer le compte (non confirmé) et envoyer le code de vérification email. */
   async function submit() {
     const err = validateStep();
     if (err) return toast.error(err);
@@ -123,8 +124,6 @@ function SignupPage() {
         throw new Error("Ce mot de passe apparaît dans des fuites de données connues. Choisissez-en un autre.");
       }
       const email = f.email.trim().toLowerCase();
-      // Compte créé côté serveur avec email déjà confirmé : la session est garantie
-      // immédiatement, ce qui débloque l'upload KYC et la soumission du dossier.
       const account = await createSignupAccount({
         data: {
           email,
@@ -135,19 +134,38 @@ function SignupPage() {
       });
       if (!account.ok) throw new Error(account.error);
 
-      const { data: session, error: signInErr } = await supabase.auth.signInWithPassword({
+      // La propriété de l'adresse email doit être prouvée avant toute session.
+      const { error: otpErr } = await supabase.auth.signInWithOtp({
         email,
-        password: f.password,
+        options: { shouldCreateUser: false },
       });
-      if (signInErr || !session.session?.user) {
-        throw new Error(
-          account.exists
-            ? "Un compte existe déjà avec cet email. Connectez-vous pour finaliser votre dossier."
-            : "Impossible d'ouvrir la session. Réessayez ou connectez-vous.",
-        );
-      }
-      const uid = session.session.user.id;
+      if (otpErr) throw new Error("Impossible d'envoyer le code de vérification. Réessayez dans un instant.");
 
+      setAwaitingCode(true);
+      toast.success("Un code de vérification vient d'être envoyé à votre adresse email.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erreur lors de la création du compte");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Étape 2 : vérifier le code, ouvrir la session, déposer les documents et soumettre le dossier. */
+  async function confirmCode() {
+    const token = code.trim();
+    if (token.length < 6) return toast.error("Entrez le code à 6 chiffres reçu par email.");
+    setBusy(true);
+    try {
+      const email = f.email.trim().toLowerCase();
+      const { data: verified, error: verifyErr } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: "email",
+      });
+      if (verifyErr || !verified.session?.user) {
+        throw new Error("Code invalide ou expiré. Demandez un nouveau code.");
+      }
+      const uid = verified.session.user.id;
 
       const allDocs = [...docsStructure, ...docsId];
        const uploaded: { key: string; label: string; path: string; name: string; size: number; mime_type: "application/pdf" | "image/jpeg" | "image/png" }[] = [];
@@ -162,7 +180,7 @@ function SignupPage() {
 
       await submitSignupApplication({
         data: {
-          email: f.email.trim().toLowerCase(), mobile: f.mobile, civility: f.civility,
+          email, mobile: f.mobile, civility: f.civility,
           last_name: f.last_name, first_name: f.first_name, country: f.country, city: f.city,
           job_title: f.job_title, structure: f.structure, client_type: f.client_type,
           client_type_other: f.client_type_other || null, website: f.website || null,
@@ -184,11 +202,28 @@ function SignupPage() {
       toast.success("Dossier soumis — votre compte est en cours de validation.");
       navigate({ to: "/dashboard" });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erreur lors de la création du compte");
+      toast.error(e instanceof Error ? e.message : "Erreur lors de la vérification");
     } finally {
       setBusy(false);
     }
   }
+
+  async function resendCode() {
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: f.email.trim().toLowerCase(),
+        options: { shouldCreateUser: false },
+      });
+      if (error) throw new Error("Envoi impossible pour le moment.");
+      toast.success("Nouveau code envoyé.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erreur");
+    } finally {
+      setBusy(false);
+    }
+  }
+
 
   return (
     <SiteLayout>
