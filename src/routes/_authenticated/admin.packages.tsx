@@ -108,3 +108,12 @@ function PackageForm({ pkg, onDone, onCancel }: { pkg: any; onDone: () => void; 
     </form>
   );
 }
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-mono uppercase tracking-widest text-foreground/50 mb-1">{label}</span>
+      {children}
+    </label>
+  );
+}
