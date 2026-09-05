@@ -192,11 +192,12 @@ function TierForm({ draft, onDone, onCancel }: { draft: Draft; onDone: () => voi
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, hint, className, children }: { label: string; hint?: string; className?: string; children: React.ReactNode }) {
   return (
-    <label className="block">
+    <label className={`block ${className ?? ""}`}>
       <span className="block text-[10px] font-mono uppercase tracking-widest text-foreground/50 mb-1">{label}</span>
       {children}
+      {hint ? <span className="block text-[10px] text-foreground/40 mt-1">{hint}</span> : null}
     </label>
   );
 }
