@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchRoles } from "@/lib/auth";
 import { listPackagesAdmin, upsertPackage, deletePackage } from "@/lib/admin.functions";
 import { toast } from "sonner";
+import { Field } from "@/components/field";
 
 export const Route = createFileRoute("/_authenticated/admin/packages")({
   beforeLoad: async () => {
@@ -106,15 +107,5 @@ function PackageForm({ pkg, onDone, onCancel }: { pkg: any; onDone: () => void; 
         <button type="submit" disabled={save.isPending} className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-sm font-semibold hover:bg-primary-dark disabled:opacity-50">Enregistrer</button>
       </div>
     </form>
-  );
-}
-
-function Field({ label, hint, className, children }: { label: string; hint?: string; className?: string; children: React.ReactNode }) {
-  return (
-    <label className={`block ${className ?? ""}`}>
-      <span className="block text-[10px] font-mono uppercase tracking-widest text-foreground/50 mb-1">{label}</span>
-      {children}
-      {hint ? <span className="block text-[10px] text-foreground/40 mt-1">{hint}</span> : null}
-    </label>
   );
 }
