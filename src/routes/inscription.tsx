@@ -57,6 +57,9 @@ function SignupPage() {
   const [certified, setCertified] = useState(false);
   const [gdprConsent, setGdprConsent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [awaitingCode, setAwaitingCode] = useState(false);
+  const [code, setCode] = useState("");
+
 
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...p, [k]: v }));
   const { data: packages = [] } = useQuery({ queryKey: ["packages"], queryFn: () => listPackages() });
