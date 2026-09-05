@@ -3,9 +3,10 @@ import { z } from "zod";
 import { assertPasswordAllowed } from "./password.server";
 
 /**
- * Crée le compte client côté serveur avec l'email déjà confirmé, afin que le
- * navigateur obtienne immédiatement une session et puisse déposer les documents
- * KYC dans le bucket privé puis soumettre le dossier sans blocage.
+ * Crée le compte client côté serveur SANS confirmer l'email : la propriété de
+ * l'adresse doit être prouvée par un code à usage unique envoyé par email
+ * (voir /inscription -> verifyOtp). Aucune session n'est délivrée ici, donc
+ * personne ne peut squatter l'adresse email d'un tiers.
  * Si l'email existe déjà, on renvoie `exists` et le client se connecte.
  */
 export const createSignupAccount = createServerFn({ method: "POST" })
@@ -29,7 +30,7 @@ export const createSignupAccount = createServerFn({ method: "POST" })
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password: data.password,
-      email_confirm: true,
+      email_confirm: false,
       user_metadata: {
         full_name: data.full_name ?? "",
         phone: data.phone ?? "",
@@ -40,10 +41,16 @@ export const createSignupAccount = createServerFn({ method: "POST" })
     if (error) {
       const message = error.message.toLowerCase();
       if (message.includes("already") || message.includes("exists") || message.includes("registered")) {
-        return { ok: true as const, exists: true as const };
+        return { ok: true as const, exists: true as const, requires_verification: true as const };
       }
       return { ok: false as const, error: error.message };
     }
 
-    return { ok: true as const, exists: false as const, user_id: created.user?.id ?? null };
+    return {
+      ok: true as const,
+      exists: false as const,
+      requires_verification: true as const,
+      user_id: created.user?.id ?? null,
+    };
   });
+
