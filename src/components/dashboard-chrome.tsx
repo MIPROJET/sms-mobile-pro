@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchRoles, type AppRole } from "@/lib/auth";
 import { LogOut, Menu, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import smsProLogo from "@/assets/sms-pro-mobile-logo.png.asset.json";
+import smsProLogo from "@/assets/sms-pro-mobile-logo.png";
 
 type NavItem = { to: string; label: string; admin?: boolean };
 
@@ -64,7 +64,7 @@ export function DashboardLayout({ children, title }: { children: React.ReactNode
       <header className="bg-background border-b border-border sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-8 py-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
           <Link to="/dashboard" className="flex min-w-0 flex-col leading-none">
-            <img src={smsProLogo.url} alt="SMS Pro Mobile" className="h-8 w-auto object-contain" />
+            <img src={smsProLogo} alt="SMS Pro Mobile" className="h-8 w-auto object-contain" />
             <span className="text-[10px] font-mono tracking-widest text-foreground/50 uppercase">
               {isAdmin ? "Admin" : "Espace client"}
             </span>

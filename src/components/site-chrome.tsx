@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, UserRound, X } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { supabase } from "@/integrations/supabase/client";
-import smsProLogo from "@/assets/sms-pro-mobile-logo.png.asset.json";
+import smsProLogo from "@/assets/sms-pro-mobile-logo.png";
 
 const NAV = [
   { to: "/solutions", label: "Solutions" },
@@ -29,7 +29,7 @@ export function SiteHeader() {
         <div className="mx-auto max-w-6xl px-4 sm:px-8 py-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
         <Link to="/" className="flex items-center shrink-0" onClick={() => setOpen(false)} aria-label="SMS Pro Mobile — accueil">
           <img
-            src={smsProLogo.url}
+            src={smsProLogo}
             alt="SMS Pro Mobile"
             className="h-8 sm:h-10 w-auto object-contain"
           />
@@ -108,7 +108,7 @@ export function SiteHeader() {
   );
 }
 
-import nmLogo from "@/assets/nm-technologie-logo.jpg.asset.json";
+import nmLogo from "@/assets/nm-technologie-logo.jpg";
 
 export function SiteFooter() {
   return (
@@ -116,7 +116,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl flex flex-col gap-8">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="sm:col-span-2 md:col-span-1">
-            <img src={smsProLogo.url} alt="SMS Pro Mobile" className="h-9 w-auto object-contain" />
+            <img src={smsProLogo} alt="SMS Pro Mobile" className="h-9 w-auto object-contain" />
             <p className="text-xs text-foreground/50 mt-2 max-w-xs">
               Plateforme SMS professionnelle propulsée par NM Technologie. Solutions de
               communication pour l'Afrique de l'Ouest.
@@ -162,7 +162,7 @@ export function SiteFooter() {
         {/* Author credit */}
         <div className="border-t border-border pt-6 flex flex-wrap items-center gap-3 text-xs text-foreground/60">
           <img
-            src={nmLogo.url}
+            src={nmLogo}
             alt="NM Technologie"
             className="h-10 w-10 rounded-full object-cover border border-border shrink-0 bg-white"
             loading="lazy"
