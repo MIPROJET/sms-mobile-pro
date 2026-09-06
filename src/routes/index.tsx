@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-chrome";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { TrustCarousel } from "@/components/trust-carousel";
 import { listPackages } from "@/lib/packages.functions";
 import { listPricingTiers } from "@/lib/pricing.functions";
 
@@ -364,6 +365,10 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
+      <TrustCarousel />
+
+
 
       {/* Contact / Devis */}
       <section className="px-4 py-16 sm:px-8 sm:py-20 bg-background border-t border-border">
